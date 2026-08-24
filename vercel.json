@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "mediai-pro",
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}

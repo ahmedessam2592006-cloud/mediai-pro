@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "mediai-pro",
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "api/**/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/gemini", "dest": "/api/gemini.js" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}

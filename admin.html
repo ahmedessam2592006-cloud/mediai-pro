@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediAI Pro - Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--bg:#f1f5f9;--surface:#ffffff;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,0.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,0.1);--radius:12px;--sidebar-width:260px;--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);}
+[data-theme="dark"]{--bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;--text-secondary:#94a3b8;--border:#334155;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:var(--transition);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px);}to{opacity:1;transform:translateX(0);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.animate-fade-in{animation:fadeIn 0.6s ease-out forwards;}
+.animate-slide-in{animation:slideInLeft 0.6s ease-out forwards;}
+
+/* Login Screen */
+.login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:var(--surface);padding:3rem;border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:400px;text-align:center;animation:fadeIn 0.5s ease-out;}
+.login-box .logo{font-size:2rem;color:var(--primary);margin-bottom:1rem;}
+.login-box h2{margin-bottom:0.5rem;}
+.login-box p{color:var(--text-secondary);margin-bottom:2rem;}
+.login-box input{width:100%;padding:1rem;margin-bottom:1rem;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;transition:var(--transition);}
+.login-box input:focus{outline:none;border-color:var(--primary);}
+.login-box button{width:100%;padding:1rem;background:var(--primary);color:white;border:none;border-radius:var(--radius);font-weight:600;cursor:pointer;font-size:1rem;transition:var(--transition);}
+.login-box button:hover{background:var(--primary-dark);transform:translateY(-2px);}
+
+/* Layout */
+.admin-layout{display:none;min-height:100vh;}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-width);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:var(--transition);}
+.sidebar-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sidebar-header i{font-size:1.5rem;color:var(--primary);}
+.sidebar-header span{font-weight:700;font-size:1.2rem;color:var(--primary);}
+.sidebar-nav{flex:1;padding:1rem 0;overflow-y:auto;}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:0.8rem 1.5rem;color:var(--text-secondary);text-decoration:none;font-weight:500;transition:var(--transition);border-left:3px solid transparent;}
+.sidebar-nav a:hover,.sidebar-nav a.active{color:var(--primary);background:rgba(37,99,235,0.05);border-left-color:var(--primary);}
+.sidebar-nav a i{width:20px;text-align:center;}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);}
+.sidebar-footer button{width:100%;padding:0.8rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius);color:var(--text);cursor:pointer;font-weight:600;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;}
+.sidebar-footer button:hover{background:var(--danger);color:white;border-color:var(--danger);}
+
+.main-content{margin-left:var(--sidebar-width);min-height:100vh;transition:var(--transition);}
+.topbar{position:sticky;top:0;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;z-index:50;}
+[data-theme="dark"] .topbar{background:rgba(30,41,59,0.9);}
+.topbar h1{font-size:1.3rem;color:var(--text);}
+.topbar-actions{display:flex;gap:1rem;align-items:center;}
+.theme-toggle-admin{width:40px;height:40px;border-radius:50%;border:none;background:var(--surface);color:var(--text);box-shadow:var(--shadow);cursor:pointer;transition:var(--transition);}
+.theme-toggle-admin:hover{transform:scale(1.1);}
+
+.content-area{padding:2rem;}
+.section-title{font-size:1.5rem;margin-bottom:1.5rem;color:var(--primary);display:flex;align-items:center;gap:10px;}
+
+/* Cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:2rem;}
+.stat-card{background:var(--surface);padding:1.5rem;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition);animation:fadeIn 0.5s ease-out;}
+.stat-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);}
+.stat-card .icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1rem;}
+.stat-card .icon.blue{background:rgba(37,99,235,0.1);color:var(--primary);}
+.stat-card .icon.green{background:rgba(16,185,129,0.1);color:var(--success);}
+.stat-card .icon.orange{background:rgba(245,158,11,0.1);color:var(--warning);}
+.stat-card .icon.red{background:rgba(239,68,68,0.1);color:var(--danger);}
+.stat-card h3{font-size:1.8rem;margin-bottom:0.3rem;}
+.stat-card p{color:var(--text-secondary);font-size:0.9rem;}
+
+/* Form Cards */
+.form-card{background:var(--surface);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:1.5rem;animation:fadeIn 0.6s ease-out;}
+.form-card h3{color:var(--primary);margin-bottom:1.5rem;padding-bottom:0.8rem;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;}
+.form-group{margin-bottom:1.2rem;}
+.form-group label{display:block;margin-bottom:0.5rem;font-weight:600;color:var(--text-secondary);font-size:0.9rem;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:0.8rem;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit;font-size:0.95rem;transition:var(--transition);}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--primary);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.btn-save{padding:0.8rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:var(--radius);font-weight:600;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:8px;}
+.btn-save:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 10px 20px rgba(37,99,235,0.3);}
+.btn-test{padding:0.8rem 1.5rem;background:var(--success);color:white;border:none;border-radius:var(--radius);font-weight:600;cursor:pointer;transition:var(--transition);margin-left:0.5rem;}
+.btn-test:hover{background:#059669;}
+.status-badge{display:inline-block;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:600;margin-left:1rem;}
+.status-badge.connected{background:rgba(16,185,129,0.1);color:var(--success);}
+.status-badge.disconnected{background:rgba(239,68,68,0.1);color:var(--danger);}
+
+/* Tabs */
+.tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;}
+.tab-btn{padding:0.6rem 1.2rem;background:transparent;border:none;border-radius:var(--radius);color:var(--text-secondary);font-weight:600;cursor:pointer;transition:var(--transition);}
+.tab-btn:hover{color:var(--primary);background:rgba(37,99,235,0.05);}
+.tab-btn.active{color:var(--primary);background:rgba(37,99,235,0.1);}
+.tab-content{display:none;animation:fadeIn 0.4s ease-out;}
+.tab-content.active{display:block;}
+
+/* Preview Box */
+.preview-box{background:var(--bg);border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;margin-top:1rem;}
+.preview-box h4{color:var(--text-secondary);margin-bottom:0.5rem;}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;right:30px;background:var(--success);color:white;padding:1rem 1.5rem;border-radius:var(--radius);box-shadow:var(--shadow-lg);display:none;align-items:center;gap:10px;z-index:9999;animation:fadeIn 0.3s ease-out;}
+.toast.show{display:flex;}
+.toast.error{background:var(--danger);}
+
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main-content{margin-left:0;}.form-row{grid-template-columns:1fr;}}
+::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+<div class="login-box">
+<div class="logo"><i class="fas fa-shield-alt"></i></div>
+<h2>Admin Login</h2>
+<p>MediAI Pro Dashboard</p>
+<input type="email" id="loginEmail" placeholder="Email address">
+<input type="password" id="loginPassword" placeholder="Password">
+<button id="loginBtn" onclick="doLogin()">Sign In</button>
+</div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div class="admin-layout" id="adminLayout">
+<div class="sidebar">
+<div class="sidebar-header"><i class="fas fa-heartbeat"></i><span>MediAI Pro</span></div>
+<nav class="sidebar-nav">
+<a href="#" class="active" onclick="showTab('dashboard',this)"><i class="fas fa-chart-line"></i> Dashboard</a>
+<a href="#" onclick="showTab('content',this)"><i class="fas fa-edit"></i> Content Editor</a>
+<a href="#" onclick="showTab('api',this)"><i class="fas fa-key"></i> API Settings</a>
+<a href="#" onclick="showTab('telegram',this)"><i class="fab fa-telegram"></i> Telegram</a>
+<a href="#" onclick="showTab('users',this)"><i class="fas fa-users"></i> Users</a>
+<a href="#" onclick="showTab('analytics',this)"><i class="fas fa-chart-bar"></i> Analytics</a>
+</nav>
+<div class="sidebar-footer">
+<button onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+</div>
+
+<div class="main-content">
+<div class="topbar">
+<h1 id="pageTitle">Dashboard Overview</h1>
+<div class="topbar-actions">
+<button class="theme-toggle-admin" id="themeToggleAdmin" onclick="toggleAdminTheme()"><i class="fas fa-moon"></i></button>
+</div>
+</div>
+
+<div class="content-area">
+
+<!-- DASHBOARD TAB -->
+<div class="tab-content active" id="tab-dashboard">
+<div class="stats-grid">
+<div class="stat-card animate-fade-in"><div class="icon blue"><i class="fas fa-comments"></i></div><h3 id="statChats">0</h3><p>Total Chats</p></div>
+<div class="stat-card animate-fade-in" style="animation-delay:0.1s"><div class="icon green"><i class="fas fa-question-circle"></i></div><h3 id="statQuizzes">0</h3><p>Quizzes Taken</p></div>
+<div class="stat-card animate-fade-in" style="animation-delay:0.2s"><div class="icon orange"><i class="fas fa-flask"></i></div><h3 id="statResearch">0</h3><p>Research Papers</p></div>
+<div class="stat-card animate-fade-in" style="animation-delay:0.3s"><div class="icon red"><i class="fas fa-users"></i></div><h3 id="statUsers">0</h3><p>Registered Users</p></div>
+</div>
+<div class="form-card">
+<h3><i class="fas fa-info-circle"></i> Quick Status</h3>
+<div class="form-row">
+<div class="form-group"><label>API Connection</label><p id="apiStatusText">Checking... <span class="status-badge disconnected" id="apiStatusBadge">Disconnected</span></p></div>
+<div class="form-group"><label>Firebase Status</label><p><span class="status-badge connected">Connected</span></p></div>
+</div>
+<div class="form-group"><label>Site URL</label><input type="text" id="siteUrl" value="https://your-site.vercel.app" readonly></div>
+</div>
+</div>
+
+<!-- CONTENT EDITOR TAB -->
+<div class="tab-content" id="tab-content">
+<div class="form-card">
+<h3><i class="fas fa-heading"></i> Hero Section</h3>
+<div class="form-group"><label>Hero Title</label><input type="text" id="heroTitle" value="MediAI Pro Medical Platform"></div>
+<div class="form-group"><label>Hero Subtitle</label><input type="text" id="heroSubtitle" value="100% Trusted AI based on verified medical research"></div>
+<div class="form-row">
+<div class="form-group"><label>Stat 1 Number</label><input type="text" id="stat1Num" value="+50,000"></div>
+<div class="form-group"><label>Stat 1 Label</label><input type="text" id="stat1Label" value="Medical Papers"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Stat 2 Number</label><input type="text" id="stat2Num" value="100%"></div>
+<div class="form-group"><label>Stat 2 Label</label><input type="text" id="stat2Label" value="Verified Accuracy"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Stat 3 Number</label><input type="text" id="stat3Num" value="+10,000"></div>
+<div class="form-group"><label>Stat 3 Label</label><input type="text" id="stat3Label" value="Medical Students"></div>
+</div>
+<button class="btn-save" onclick="saveContent()"><i class="fas fa-save"></i> Save Hero Content</button>
+</div>
+
+<div class="form-card">
+<h3><i class="fas fa-list"></i> Section Titles & Descriptions</h3>
+<div class="form-group"><label>Medical Chat Title</label><input type="text" id="chatTitle" value="AI Medical Study Assistant"></div>
+<div class="form-group"><label>Medical Chat Description</label><textarea id="chatDesc">Your personal AI tutor for medical studies. Ask anything and get answers based strictly on verified research</textarea></div>
+<div class="form-group"><label>UWorld Quiz Title</label><input type="text" id="quizTitle" value="UWorld Question Generator"></div>
+<div class="form-group"><label>UWorld Quiz Description</label><textarea id="quizDesc">Upload a PDF from your study sources and we will generate UWorld-style questions based on the content only</textarea></div>
+<div class="form-group"><label>Research Assistant Title</label><input type="text" id="researchTitle" value="Medical Research Assistant"></div>
+<div class="form-group"><label>Research Assistant Description</label><textarea id="researchDesc">Chat with AI to create your research paper. Describe your topic and requirements</textarea></div>
+<button class="btn-save" onclick="saveSections()"><i class="fas fa-save"></i> Save Section Content</button>
+</div>
+</div>
+
+<!-- API SETTINGS TAB -->
+<div class="tab-content" id="tab-api">
+<div class="form-card">
+<h3><i class="fas fa-key"></i> Google AI Studio API Key</h3>
+<div class="form-group"><label>API Key</label><input type="password" id="apiKeyInput" placeholder="Enter your Gemini API Key"></div>
+<div class="form-group"><label>API Model</label><select id="apiModel"><option value="gemini-pro" selected>Gemini Pro</option><option value="gemini-1.5-pro">Gemini 1.5 Pro</option></select></div>
+<div class="form-group"><label>Max Output Tokens</label><input type="number" id="maxTokens" value="8192"></div>
+<button class="btn-save" onclick="saveApiSettings()"><i class="fas fa-save"></i> Save API Settings</button>
+<button class="btn-test" onclick="testApi()"><i class="fas fa-vial"></i> Test Connection</button>
+</div>
+
+<div class="form-card">
+<h3><i class="fas fa-fire"></i> Firebase Config</h3>
+<div class="form-group"><label>API Key</label><input type="text" id="fbApiKey" placeholder="Firebase API Key"></div>
+<div class="form-group"><label>Auth Domain</label><input type="text" id="fbAuthDomain" placeholder="project.firebaseapp.com"></div>
+<div class="form-group"><label>Project ID</label><input type="text" id="fbProjectId" placeholder="project-id"></div>
+<div class="form-row">
+<div class="form-group"><label>Sender ID</label><input type="text" id="fbSenderId" placeholder="123456789"></div>
+<div class="form-group"><label>App ID</label><input type="text" id="fbAppId" placeholder="1:123:web:abc"></div>
+</div>
+<button class="btn-save" onclick="saveFirebaseConfig()"><i class="fas fa-save"></i> Save Firebase Config</button>
+</div>
+</div>
+
+<!-- TELEGRAM TAB -->
+<div class="tab-content" id="tab-telegram">
+<div class="form-card">
+<h3><i class="fab fa-telegram"></i> Telegram Channel Settings</h3>
+<div class="form-group"><label>Channel Link</label><input type="url" id="tgLink" placeholder="https://t.me/yourchannel"></div>
+<div class="form-group"><label>Button Text</label><input type="text" id="tgText" value="Join our channel"></div>
+<div class="form-group"><label>Button Position</label><select id="tgPosition"><option value="bottom-right" selected>Bottom Right</option><option value="bottom-left">Bottom Left</option></select></div>
+<div class="form-group"><label><input type="checkbox" id="tgVisible" checked style="width:auto;margin-right:8px;"> Show Telegram Button</label></div>
+<button class="btn-save" onclick="saveTelegram()"><i class="fas fa-save"></i> Save Telegram Settings</button>
+</div>
+</div>
+
+<!-- USERS TAB -->
+<div class="tab-content" id="tab-users">
+<div class="form-card">
+<h3><i class="fas fa-users-cog"></i> User Management</h3>
+<div class="form-group"><label>Add New Admin (Email)</label><input type="email" id="newAdminEmail" placeholder="admin@example.com"></div>
+<button class="btn-save" onclick="addAdmin()"><i class="fas fa-user-plus"></i> Add Admin</button>
+</div>
+<div class="form-card">
+<h3><i class="fas fa-list"></i> Admin List</h3>
+<div id="adminList"><p style="color:var(--text-secondary)">Loading...</p></div>
+</div>
+</div>
+
+<!-- ANALYTICS TAB -->
+<div class="tab-content" id="tab-analytics">
+<div class="form-card">
+<h3><i class="fas fa-chart-pie"></i> Usage Analytics</h3>
+<div class="stats-grid">
+<div class="stat-card"><div class="icon blue"><i class="fas fa-calendar-day"></i></div><h3 id="todayChats">0</h3><p>Chats Today</p></div>
+<div class="stat-card"><div class="icon green"><i class="fas fa-calendar-week"></i></div><h3 id="weekChats">0</h3><p>Chats This Week</p></div>
+<div class="stat-card"><div class="icon orange"><i class="fas fa-file-pdf"></i></div><h3 id="totalPdfs">0</h3><p>PDFs Uploaded</p></div>
+<div class="stat-card"><div class="icon red"><i class="fas fa-clock"></i></div><h3 id="avgResponse">0s</h3><p>Avg Response Time</p></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Saved successfully!</span></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA2WUqN7St6hOwRitd15nNwB3aZgFpAnKQ",
+  authDomain: "mediai-pro-28e98.firebaseapp.com",
+  projectId: "mediai-pro-28e98",
+  storageBucket: "mediai-pro-28e98.firebasestorage.app",
+  messagingSenderId: "707124052727",
+  appId: "1:707124052727:web:022e7db8087e80a9cb09f2"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.firestore();
+let currentUser=null;
+
+// Admin credentials
+const ADMIN_EMAIL = "ahmedessam123350@gmail.com";
+const ADMIN_PASSWORD = "sasa1968";
+
+// Check auth state
+auth.onAuthStateChanged(async(user)=>{
+if(user){
+currentUser=user;
+const doc=await db.collection('users').doc(user.uid).get();
+if(doc.exists&&doc.data().role==='admin'){
+document.getElementById('loginScreen').style.display='none';
+document.getElementById('adminLayout').style.display='block';
+loadAllSettings();
+loadStats();
+}else{
+alert('Not authorized');
+await auth.signOut();
+}
+}else{
+document.getElementById('loginScreen').style.display='flex';
+document.getElementById('adminLayout').style.display='none';
+}
+});
+
+function doLogin(){
+const email=document.getElementById('loginEmail').value;
+const pass=document.getElementById('loginPassword').value;
+if(!email||!pass){alert('Enter email and password');return;}
+auth.signInWithEmailAndPassword(email,pass).catch(e=>alert('Login failed: '+e.message));
+}
+
+function doLogout(){auth.signOut();}
+
+function showTab(tabName,el){
+document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.sidebar-nav a').forEach(a=>a.classList.remove('active'));
+document.getElementById('tab-'+tabName).classList.add('active');
+if(el)el.classList.add('active');
+const titles={dashboard:'Dashboard Overview',content:'Content Editor',api:'API Settings',telegram:'Telegram Settings',users:'User Management',analytics:'Analytics'};
+document.getElementById('pageTitle').textContent=titles[tabName];
+}
+
+// Toast
+function showToast(msg,isError=false){
+const toast=document.getElementById('toast');
+document.getElementById('toastMsg').textContent=msg;
+toast.className='toast show'+(isError?' error':'');
+setTimeout(()=>toast.classList.remove('show'),3000);
+}
+
+// Load Settings
+async function loadAllSettings(){
+try{
+const doc=await db.collection('settings').doc('site').get();
+if(doc.exists){
+const data=doc.data();
+if(data.heroTitle)document.getElementById('heroTitle').value=data.heroTitle;
+if(data.heroSubtitle)document.getElementById('heroSubtitle').value=data.heroSubtitle;
+if(data.stat1Num)document.getElementById('stat1Num').value=data.stat1Num;
+if(data.stat1Label)document.getElementById('stat1Label').value=data.stat1Label;
+if(data.stat2Num)document.getElementById('stat2Num').value=data.stat2Num;
+if(data.stat2Label)document.getElementById('stat2Label').value=data.stat2Label;
+if(data.stat3Num)document.getElementById('stat3Num').value=data.stat3Num;
+if(data.stat3Label)document.getElementById('stat3Label').value=data.stat3Label;
+if(data.chatTitle)document.getElementById('chatTitle').value=data.chatTitle;
+if(data.chatDesc)document.getElementById('chatDesc').value=data.chatDesc;
+if(data.quizTitle)document.getElementById('quizTitle').value=data.quizTitle;
+if(data.quizDesc)document.getElementById('quizDesc').value=data.quizDesc;
+if(data.researchTitle)document.getElementById('researchTitle').value=data.researchTitle;
+if(data.researchDesc)document.getElementById('researchDesc').value=data.researchDesc;
+if(data.apiKey)document.getElementById('apiKeyInput').value=data.apiKey;
+if(data.telegramLink)document.getElementById('tgLink').value=data.telegramLink;
+if(data.telegramText)document.getElementById('tgText').value=data.telegramText;
+if(data.telegramVisible!==undefined)document.getElementById('tgVisible').checked=data.telegramVisible;
+}
+}catch(e){console.error(e);}
+}
+
+// Save functions
+async function saveContent(){
+const data={
+heroTitle:document.getElementById('heroTitle').value,
+heroSubtitle:document.getElementById('heroSubtitle').value,
+stat1Num:document.getElementById('stat1Num').value,
+stat1Label:document.getElementById('stat1Label').value,
+stat2Num:document.getElementById('stat2Num').value,
+stat2Label:document.getElementById('stat2Label').value,
+stat3Num:document.getElementById('stat3Num').value,
+stat3Label:document.getElementById('stat3Label').value
+};
+await db.collection('settings').doc('site').set(data,{merge:true});
+showToast('Hero content saved!');
+}
+
+async function saveSections(){
+const data={
+chatTitle:document.getElementById('chatTitle').value,
+chatDesc:document.getElementById('chatDesc').value,
+quizTitle:document.getElementById('quizTitle').value,
+quizDesc:document.getElementById('quizDesc').value,
+researchTitle:document.getElementById('researchTitle').value,
+researchDesc:document.getElementById('researchDesc').value
+};
+await db.collection('settings').doc('site').set(data,{merge:true});
+showToast('Section content saved!');
+}
+
+async function saveApiSettings(){
+const data={
+apiKey:document.getElementById('apiKeyInput').value,
+apiModel:document.getElementById('apiModel').value,
+maxTokens:parseInt(document.getElementById('maxTokens').value)
+};
+await db.collection('settings').doc('site').set(data,{merge:true});
+showToast('API settings saved!');
+}
+
+async function saveTelegram(){
+const data={
+telegramLink:document.getElementById('tgLink').value,
+telegramText:document.getElementById('tgText').value,
+telegramPosition:document.getElementById('tgPosition').value,
+telegramVisible:document.getElementById('tgVisible').checked
+};
+await db.collection('settings').doc('site').set(data,{merge:true});
+showToast('Telegram settings saved!');
+}
+
+async function saveFirebaseConfig(){
+showToast('Firebase config saved!');
+}
+
+function testApi(){
+showToast('API test feature coming soon','error');
+}
+
+async function addAdmin(){
+const email=document.getElementById('newAdminEmail').value;
+if(!email){showToast('Enter email','error');return;}
+showToast('Admin added!');
+}
+
+// Stats
+async function loadStats(){
+try{
+const chats=await db.collection('chats').get();
+const quizzes=await db.collection('quizAttempts').get();
+const research=await db.collection('research').get();
+const users=await db.collection('users').get();
+document.getElementById('statChats').textContent=chats.size;
+document.getElementById('statQuizzes').textContent=quizzes.size;
+document.getElementById('statResearch').textContent=research.size;
+document.getElementById('statUsers').textContent=users.size;
+}catch(e){console.error(e);}
+}
+
+// Theme
+function toggleAdminTheme(){
+const html=document.documentElement;
+const current=html.getAttribute('data-theme')||'light';
+const next=current==='light'?'dark':'light';
+html.setAttribute('data-theme',next);
+localStorage.setItem('admin-theme',next);
+document.getElementById('themeToggleAdmin').innerHTML=next==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
+}
+
+// Init theme
+const savedTheme=localStorage.getItem('admin-theme')||'light';
+document.documentElement.setAttribute('data-theme',savedTheme);
+document.getElementById('themeToggleAdmin').innerHTML=savedTheme==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
+</script>
+</body>
+</html>

@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediAI Pro - Smart Medical Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#06b6d4;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--surface:#ffffff;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,0.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,0.1);--radius:12px;--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);}
+[data-theme="dark"]{--bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;--text-secondary:#94a3b8;--border:#334155;--shadow:0 4px 6px -1px rgba(0,0,0,0.3);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:var(--transition);overflow-x:hidden;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes particleFloat{0%,100%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}}
+.animate-fade-in{animation:fadeIn 0.8s ease-out forwards;}
+.animate-fade-in-delay{animation:fadeIn 0.8s ease-out 0.3s forwards;opacity:0;}
+.animate-slide-up{animation:fadeIn 0.8s ease-out 0.6s forwards;opacity:0;}
+html{scroll-behavior:smooth;}
+.scroll-hidden{opacity:0;transform:translateY(60px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1);}
+.scroll-hidden.scroll-left{transform:translateX(-80px);}
+.scroll-hidden.scroll-right{transform:translateX(80px);}
+.scroll-hidden.scroll-scale{transform:scale(0.8);}
+.scroll-visible{opacity:1;transform:translateY(0) translateX(0) scale(1);}
+.delay-1{transition-delay:0.1s;}
+.delay-2{transition-delay:0.2s;}
+.delay-3{transition-delay:0.3s;}
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));z-index:9999;transition:width 0.1s linear;width:0%;}
+.theme-toggle{position:fixed;top:20px;right:20px;z-index:1000;width:50px;height:50px;border-radius:50%;border:none;background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);cursor:pointer;transition:var(--transition);font-size:1.2rem;}
+.theme-toggle:hover{transform:rotate(180deg) scale(1.1);}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;transition:var(--transition);}
+[data-theme="dark"] .navbar{background:rgba(30,41,59,0.95);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.5rem;font-weight:700;color:var(--primary);}
+.logo i{font-size:2rem;animation:pulse 2s infinite;}
+.nav-links{display:flex;gap:0.5rem;align-items:center;overflow-x:auto;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-weight:600;padding:0.6rem 1rem;border-radius:var(--radius);transition:var(--transition);display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:0.9rem;}
+.nav-links a:hover,.nav-links a.active{color:var(--primary);background:rgba(37,99,235,0.1);}
+.nav-links a i{font-size:1rem;}
+.hero{margin-top:80px;padding:4rem 5%;text-align:center;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;position:relative;overflow:hidden;background-attachment:fixed;}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:50px 50px;animation:float 6s ease-in-out infinite;}
+.hero-content{position:relative;z-index:1;}
+.hero h1{font-size:3rem;margin-bottom:1rem;text-shadow:2px 2px 4px rgba(0,0,0,0.2);}
+.hero p{font-size:1.2rem;margin-bottom:2rem;opacity:0.9;}
+.hero-particles{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;}
+.particle{position:absolute;width:6px;height:6px;background:rgba(255,255,255,0.3);border-radius:50%;animation:particleFloat 8s infinite ease-in-out;}
+.particle:nth-child(1){left:10%;animation-delay:0s;animation-duration:7s;}
+.particle:nth-child(2){left:20%;animation-delay:1s;animation-duration:9s;width:8px;height:8px;}
+.particle:nth-child(3){left:35%;animation-delay:2s;animation-duration:6s;}
+.particle:nth-child(4){left:50%;animation-delay:0.5s;animation-duration:8s;width:4px;height:4px;}
+.particle:nth-child(5){left:65%;animation-delay:3s;animation-duration:10s;}
+.particle:nth-child(6){left:80%;animation-delay:1.5s;animation-duration:7s;width:10px;height:10px;}
+.particle:nth-child(7){left:90%;animation-delay:2.5s;animation-duration:8s;}
+.particle:nth-child(8){left:5%;animation-delay:4s;animation-duration:9s;width:5px;height:5px;}
+.stats{display:flex;justify-content:center;gap:3rem;margin-top:2rem;position:relative;z-index:1;}
+.stat{background:rgba(255,255,255,0.2);padding:1.5rem 2rem;border-radius:var(--radius);backdrop-filter:blur(10px);min-width:150px;transition:transform 0.4s ease,box-shadow 0.4s ease;}
+.stat:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 20px 40px rgba(37,99,235,0.15);}
+.stat i{font-size:2rem;margin-bottom:0.5rem;}
+.stat h3{font-size:1.8rem;margin-bottom:0.2rem;}
+.container{max-width:1200px;margin:0 auto;padding:2rem 5%;}
+.section{margin:3rem 0;background:var(--surface);border-radius:20px;padding:2rem;box-shadow:var(--shadow);transition:var(--transition);border:1px solid var(--border);position:relative;overflow:hidden;}
+.section:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,0.05),rgba(6,182,212,0.05));opacity:0;transition:opacity 0.5s ease;pointer-events:none;z-index:0;}
+.section:hover::before{opacity:1;}
+.section-header{text-align:center;margin-bottom:2rem;position:relative;z-index:1;}
+.section-header h2{font-size:1.8rem;color:var(--primary);margin-bottom:0.5rem;display:flex;align-items:center;justify-content:center;gap:10px;}
+.section-header p{color:var(--text-secondary);}
+.chat-container{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:500px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);position:relative;z-index:1;}
+#chat .section-header{margin-bottom:0.5rem;}
+#chat{padding:1rem 2%;max-width:100%;}
+#chat .chat-container{max-width:900px;margin:0 auto;width:100%;}
+.research-chat-container{height:calc(100vh - 250px);min-height:400px;}
+#research .chat-container{max-width:900px;margin:0 auto;width:100%;}
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;background:var(--bg);display:flex;flex-direction:column;gap:1rem;}
+.message{display:flex;gap:1rem;max-width:85%;animation:fadeIn 0.3s ease-out;}
+.message.user{align-self:flex-end;flex-direction:row-reverse;}
+.message .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.message.bot .avatar{background:var(--primary);color:white;}
+.message.user .avatar{background:var(--secondary);color:white;}
+.message .content{background:var(--surface);padding:1rem;border-radius:var(--radius);box-shadow:var(--shadow);line-height:1.6;word-break:break-word;unicode-bidi:plaintext;}
+.message.user .content{background:var(--primary);color:white;}
+.message .references{margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border);font-size:0.85rem;}
+.message .references a{color:var(--secondary);text-decoration:none;display:block;margin:0.3rem 0;padding:0.4rem;background:rgba(37,99,235,0.05);border-radius:6px;transition:var(--transition);}
+.message .references a:hover{text-decoration:underline;background:rgba(37,99,235,0.1);}
+.message .sources-badge{display:inline-flex;align-items:center;gap:6px;margin-top:0.5rem;padding:0.3rem 0.8rem;background:rgba(16,185,129,0.1);color:var(--success);border-radius:20px;font-size:0.8rem;font-weight:600;}
+.message .sources-badge i{font-size:0.75rem;}
+.typing-indicator{display:flex;gap:5px;padding:1rem;}
+.typing-indicator span{width:8px;height:8px;background:var(--primary);border-radius:50%;animation:pulse 1s infinite;}
+.typing-indicator span:nth-child(2){animation-delay:0.2s;}
+.typing-indicator span:nth-child(3){animation-delay:0.4s;}
+.chat-input-area{padding:0.75rem;background:var(--surface);border-top:1px solid var(--border);box-sizing:border-box;}
+.input-wrapper{display:flex;gap:0.5rem;align-items:flex-end;width:100%;box-sizing:border-box;}
+.input-wrapper textarea{flex:1;padding:0.85rem 1.1rem;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;transition:var(--transition);resize:none;overflow:hidden;min-height:48px;max-height:280px;line-height:1.5;width:100%;box-sizing:border-box;}
+.input-wrapper textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,0.08);}
+.input-wrapper textarea::placeholder{color:var(--text-secondary);opacity:0.7;}
+.btn-primary{padding:0;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;border-radius:var(--radius);font-weight:600;cursor:pointer;transition:var(--transition);font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:0;position:relative;overflow:hidden;height:48px;width:48px;flex-shrink:0;font-size:1rem;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(37,99,235,0.3);}
+.btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left 0.5s ease;}
+.btn-primary:hover::after{left:100%;}
+.btn-secondary{padding:0.5rem 1rem;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
+.btn-secondary:hover{background:var(--primary);color:white;border-color:var(--primary);}
+.btn-danger{padding:0.5rem 1rem;background:transparent;color:var(--danger);border:1px solid var(--danger);border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
+.btn-danger:hover{background:var(--danger);color:white;}
+.chat-options{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:0.9rem;color:var(--text-secondary);flex-wrap:wrap;}
+.chat-options-left{display:flex;align-items:center;gap:1rem;}
+.toggle-research{display:flex;align-items:center;gap:0.5rem;cursor:pointer;}
+.upload-area{border:3px dashed var(--border);border-radius:20px;padding:3rem;text-align:center;cursor:pointer;transition:var(--transition);background:var(--bg);}
+.upload-area:hover,.upload-area.dragover{border-color:var(--primary);background:rgba(37,99,235,0.05);transform:scale(1.02);}
+.upload-area i{font-size:3rem;color:var(--primary);margin-bottom:1rem;}
+.upload-area h3{margin-bottom:0.5rem;}
+.upload-area p{color:var(--text-secondary);}
+.quiz-settings{margin-top:2rem;padding:2rem;background:var(--bg);border-radius:var(--radius);}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.setting label{display:block;margin-bottom:0.5rem;font-weight:600;color:var(--text-secondary);}
+.setting select,.input-group input,.input-group textarea,.input-group select{width:100%;padding:0.8rem;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-family:inherit;transition:var(--transition);}
+.setting select:focus,.input-group input:focus,.input-group textarea:focus{outline:none;border-color:var(--primary);}
+.btn-large{padding:1rem 2rem;font-size:1.1rem;width:100%;justify-content:center;}
+.quiz-progress{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.progress-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;width:5%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;transition:width 0.3s ease;}
+.question-card{background:var(--bg);padding:2rem;border-radius:var(--radius);border:1px solid var(--border);}
+.question-header{display:flex;justify-content:space-between;margin-bottom:1rem;color:var(--text-secondary);font-size:0.9rem;}
+.question-text{font-size:1.1rem;font-weight:600;margin-bottom:1.5rem;line-height:1.8;}
+.options-list{display:flex;flex-direction:column;gap:0.8rem;}
+.option{padding:1rem;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:1rem;}
+.option:hover{border-color:var(--primary);background:rgba(37,99,235,0.05);}
+.option.selected{border-color:var(--primary);background:rgba(37,99,235,0.1);}
+.option.correct{border-color:var(--success);background:rgba(16,185,129,0.1);}
+.option.wrong{border-color:var(--danger);background:rgba(239,68,68,0.1);}
+.option-letter{width:30px;height:30px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+.explanation{margin-top:1.5rem;padding:1.5rem;background:rgba(37,99,235,0.05);border-radius:var(--radius);border-left:4px solid var(--primary);display:none;}
+.explanation.show{display:block;animation:fadeIn 0.3s ease-out;}
+.quiz-nav{display:flex;justify-content:space-between;margin-top:1.5rem;}
+.research-chat-wrapper{display:flex;flex-direction:column;gap:2rem;}
+.research-output{background:var(--bg);padding:2rem;border-radius:var(--radius);border:1px solid var(--border);animation:fadeIn 0.6s ease-out;display:none;}
+.output-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--border);}
+.output-header h3{color:var(--primary);display:flex;align-items:center;gap:8px;}
+.output-actions{display:flex;gap:0.5rem;}
+.research-content{line-height:1.8;margin-bottom:1.5rem;max-height:600px;overflow-y:auto;padding:1rem;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);}
+.research-content h3{color:var(--primary);margin:1.5rem 0 0.8rem;font-size:1.1rem;border-bottom:1px solid var(--border);padding-bottom:0.3rem;}
+.references-section{padding-top:1rem;border-top:2px solid var(--border);}
+.references-section h4{color:var(--primary);margin-bottom:0.5rem;}
+.references-section ul{list-style:none;padding:0;}
+.references-section li{padding:0.5rem;margin:0.3rem 0;background:var(--surface);border-radius:8px;border-left:3px solid var(--secondary);}
+.references-section a{color:var(--secondary);text-decoration:none;}
+.telegram-float{position:fixed;bottom:30px;right:30px;z-index:1000;background:linear-gradient(135deg,#0088cc,#00a8e6);color:white;padding:1rem 1.5rem;border-radius:50px;text-decoration:none;display:none;align-items:center;gap:10px;font-weight:600;box-shadow:0 10px 30px rgba(0,136,204,0.4);transition:var(--transition);animation:float 3s ease-in-out infinite;}
+.telegram-float:hover{transform:translateY(-5px) scale(1.05);box-shadow:0 15px 40px rgba(0,136,204,0.6);}
+.telegram-float i{font-size:1.5rem;}
+.footer{text-align:center;padding:2rem;background:var(--surface);border-top:1px solid var(--border);margin-top:3rem;}
+.disclaimer{color:var(--danger);font-size:0.85rem;margin-top:0.5rem;}
+.api-warning{background:rgba(245,158,11,0.1);border:1px solid var(--warning);color:var(--warning);padding:1rem;border-radius:var(--radius);margin:1rem 0;text-align:center;font-size:0.9rem;}
+.memory-indicator{display:flex;align-items:center;gap:6px;padding:0.3rem 0.8rem;background:rgba(16,185,129,0.1);color:var(--success);border-radius:20px;font-size:0.8rem;font-weight:600;}
+.memory-indicator i{font-size:0.75rem;}
+.pdf-chat-container{max-width:900px;margin:0 auto;}
+.pdf-status-bar{display:flex;align-items:center;gap:1rem;padding:0.8rem 1rem;background:rgba(37,99,235,0.05);border-radius:var(--radius);margin-bottom:1rem;border:1px solid var(--border);}
+.pdf-status-bar i{color:var(--primary);}
+.pdf-status-bar .pdf-name{font-weight:600;color:var(--primary);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-status-bar .pdf-pages{font-size:0.85rem;color:var(--text-secondary);}
+.pdf-text-preview{max-height:200px;overflow-y:auto;padding:1rem;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1rem;font-size:0.9rem;line-height:1.6;color:var(--text-secondary);}
+.pdf-text-preview::-webkit-scrollbar{width:6px;}
+.pdf-text-preview::-webkit-scrollbar-thumb{background:var(--primary);border-radius:3px;}
+.source-count-badge{display:inline-flex;align-items:center;gap:4px;padding:0.2rem 0.6rem;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:12px;font-size:0.75rem;font-weight:600;margin-top:0.5rem;}
+.quiz-result{text-align:center;padding:2rem;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);}
+.quiz-result h3{font-size:2rem;color:var(--primary);margin-bottom:0.5rem;}
+.quiz-result p{color:var(--text-secondary);margin-bottom:1rem;}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:white;animation:spin 1s ease-in-out infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Voice button styles */
+.voice-btn{width:48px;height:48px;border-radius:50%;border:2px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.voice-btn:hover{border-color:var(--primary);color:var(--primary);transform:scale(1.1);}
+.voice-btn.recording{background:var(--danger);color:white;border-color:var(--danger);animation:pulse 1s infinite;}
+.voice-btn.recording:hover{background:#dc2626;}
+
+/* Sources section in chat */
+.sources-section{margin-top:1rem;padding-top:0.8rem;border-top:2px solid var(--border);}
+.sources-section-title{color:var(--primary);font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;}
+.source-item{display:flex;align-items:flex-start;gap:8px;padding:0.5rem;background:rgba(37,99,235,0.03);border-radius:6px;margin-bottom:0.4rem;border-left:3px solid var(--primary);}
+.source-item .source-num{background:var(--primary);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;}
+.source-item .source-info{flex:1;font-size:0.82rem;}
+.source-item .source-info a{color:var(--primary);text-decoration:none;font-weight:500;}
+.source-item .source-info a:hover{text-decoration:underline;}
+.source-item .source-meta{color:var(--text-secondary);font-size:0.75rem;margin-top:2px;}
+.source-warning{background:rgba(245,158,11,0.1);border:1px solid var(--warning);border-radius:8px;padding:0.8rem;margin-bottom:0.8rem;font-size:0.85rem;color:var(--warning);}
+.source-error{background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:8px;padding:0.8rem;margin-bottom:0.8rem;font-size:0.85rem;color:var(--danger);}
+
+@media(max-width:768px){.navbar{padding:0.8rem 1rem;}.nav-links{gap:0.5rem;max-width:70%;}.nav-links a{padding:0.4rem 0.7rem;font-size:0.8rem;}.hero h1{font-size:1.8rem;}.stats{flex-direction:column;gap:1rem;}.settings-grid{grid-template-columns:1fr;}.section{padding:1rem;}.message{max-width:95%;}.chat-options{flex-direction:column;align-items:flex-start;}}
+::-webkit-scrollbar{width:8px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px;}::-webkit-scrollbar-thumb:hover{background:var(--primary-dark);}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+
+<nav class="navbar">
+<div class="logo"><i class="fas fa-heartbeat"></i><span>MediAI Pro</span></div>
+<div class="nav-links">
+<a href="#chat" class="active"><i class="fas fa-comments"></i> Chat</a>
+<a href="#quiz"><i class="fas fa-question-circle"></i> Quiz</a>
+<a href="#pdfchat"><i class="fas fa-file-medical"></i> Doc Chat</a>
+<a href="#research"><i class="fas fa-flask"></i> Research</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="hero-particles">
+<div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+<div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+</div>
+<div class="hero-content">
+<h1 class="animate-fade-in">MediAI Pro Medical Platform</h1>
+<p class="animate-fade-in-delay">100% Trusted AI based on verified medical research</p>
+<div class="stats animate-slide-up">
+<div class="stat scroll-hidden delay-1"><i class="fas fa-book-medical"></i><h3>+50,000</h3><p>Medical Papers</p></div>
+<div class="stat scroll-hidden delay-2"><i class="fas fa-check-circle"></i><h3>100%</h3><p>Verified Accuracy</p></div>
+<div class="stat scroll-hidden delay-3"><i class="fas fa-users"></i><h3>+10,000</h3><p>Medical Students</p></div>
+</div>
+</div>
+</header>
+
+<main class="container">
+
+<section id="chat" class="section scroll-hidden">
+<div class="section-header scroll-hidden">
+<h2><i class="fas fa-stethoscope"></i> AI Medical Study Assistant</h2>
+<p>Your personal AI tutor for medical studies. Ask anything and get answers based strictly on verified research</p>
+</div>
+<div class="chat-container">
+<div class="chat-messages" id="chatMessages"></div>
+<div class="chat-input-area">
+<div class="input-wrapper">
+<textarea id="chatInput" placeholder="Ask anything medical... (Click mic to speak)" autocomplete="off" rows="1"></textarea>
+<button class="voice-btn" id="chatVoiceBtn" onclick="toggleVoice('chat')" title="Click to speak"><i class="fas fa-microphone"></i></button>
+<button id="sendChat" class="btn-primary"><i class="fas fa-paper-plane"></i></button>
+</div>
+<div class="chat-options">
+<div class="chat-options-left">
+<label class="toggle-research"><input type="checkbox" id="researchMode" checked><span>Search verified sources only</span></label>
+<div class="memory-indicator" id="memoryIndicator" style="display:none;"><i class="fas fa-brain"></i> <span id="memoryCount">0</span> msgs</div>
+</div>
+<div>
+<button class="btn-secondary" id="clearChatBtn" onclick="clearChat()"><i class="fas fa-trash-alt"></i> New Topic</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="quiz" class="section scroll-hidden">
+<div class="section-header scroll-hidden">
+<h2><i class="fas fa-brain"></i> UWorld Question Generator</h2>
+<p>Upload a PDF from your study sources and we will generate UWorld-style questions based on the content only</p>
+</div>
+<div class="quiz-container">
+<div class="upload-area" id="uploadArea">
+<i class="fas fa-cloud-upload-alt"></i>
+<h3>Drag file here or click to upload</h3>
+<p>PDF only (Max 10MB)</p>
+<input type="file" id="pdfInput" accept=".pdf" hidden>
+</div>
+<div class="quiz-settings" id="quizSettings" style="display:none">
+<h3>Quiz Settings</h3>
+<div class="settings-grid">
+<div class="setting"><label>Number of Questions</label><select id="questionCount"><option value="5">5 Questions</option><option value="10" selected>10 Questions</option><option value="15">15 Questions</option><option value="20">20 Questions</option><option value="25">25 Questions</option><option value="30">30 Questions</option></select></div>
+<div class="setting"><label>Difficulty Level</label><select id="difficulty"><option value="uworld">Like UWorld</option><option value="hard">Very Hard</option><option value="mixed">Mixed</option></select></div>
+</div>
+<button class="btn-primary btn-large" id="generateQuiz"><i class="fas fa-magic"></i> Generate Questions</button>
+</div>
+<div class="quiz-display" id="quizDisplay" style="display:none">
+<div class="quiz-progress"><div class="progress-bar"><div class="progress-bar-fill" id="progressBarFill"></div></div><span id="progressText">1 / 10</span></div>
+<div class="question-card" id="questionCard"></div>
+<div class="quiz-nav" id="quizNav"></div>
+</div>
+<div class="quiz-result" id="quizResult" style="display:none">
+<h3 id="quizScore">0/0</h3>
+<p id="quizFeedback"></p>
+<button class="btn-primary btn-large" onclick="resetQuiz()"><i class="fas fa-redo"></i> Try Again</button>
+</div>
+</div>
+</section>
+
+<section id="pdfchat" class="section scroll-hidden">
+<div class="section-header scroll-hidden">
+<h2><i class="fas fa-file-medical"></i> Medical Document Chat</h2>
+<p>Upload a medical PDF or paste research text to discuss with AI. The AI will analyze the document and answer your questions based on its content + verified medical sources.</p>
+</div>
+<div class="pdf-chat-container">
+<div class="upload-area" id="pdfChatUploadArea">
+<i class="fas fa-cloud-upload-alt"></i>
+<h3>Upload Medical PDF or Paste Text</h3>
+<p>PDF, TXT files supported (Max 20MB) - Or paste text directly below</p>
+<input type="file" id="pdfChatFileInput" accept=".pdf,.txt" hidden>
+</div>
+<div id="pdfChatTextInput" style="margin-top:1rem;">
+<textarea id="pdfChatPastedText" placeholder="Or paste your medical text, case report, or research notes here..." style="width:100%;min-height:120px;padding:1rem;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit;font-size:0.95rem;resize:vertical;"></textarea>
+<button class="btn-primary btn-large" id="loadPastedText" style="margin-top:0.5rem;width:auto;padding:0.8rem 2rem;"><i class="fas fa-check"></i> Load Text</button>
+</div>
+<div id="pdfChatLoaded" style="display:none;margin-top:1rem;">
+<div class="pdf-status-bar">
+<i class="fas fa-file-medical"></i>
+<span class="pdf-name" id="pdfChatFileName">Document</span>
+<span class="pdf-pages" id="pdfChatCharCount">0 chars</span>
+<button class="btn-secondary" id="clearPdfChatBtn" onclick="clearPdfChat()"><i class="fas fa-trash-alt"></i> Clear</button>
+</div>
+<div class="chat-container" style="height:500px;margin-top:1rem;">
+<div class="chat-messages" id="pdfChatMessages"></div>
+<div class="chat-input-area">
+<div class="input-wrapper">
+<textarea id="pdfChatInput" placeholder="Ask about this document... (Click mic to speak)" autocomplete="off" rows="1"></textarea>
+<button class="voice-btn" id="pdfChatVoiceBtn" onclick="toggleVoice('pdfchat')" title="Click to speak"><i class="fas fa-microphone"></i></button>
+<button id="sendPdfChat" class="btn-primary"><i class="fas fa-paper-plane"></i></button>
+</div>
+<div class="chat-options">
+<div class="chat-options-left">
+<label class="toggle-research"><input type="checkbox" id="pdfResearchMode" checked><span>Cross-check with medical sources</span></label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="research" class="section scroll-hidden">
+<div class="section-header scroll-hidden">
+<h2><i class="fas fa-microscope"></i> Medical Research Assistant</h2>
+<p>Chat with AI to create your research paper. Describe your topic and requirements</p>
+</div>
+<div class="research-chat-wrapper">
+<div class="chat-container research-chat-container">
+<div class="chat-messages" id="researchMessages"></div>
+<div class="chat-input-area">
+<div class="input-wrapper">
+<textarea id="researchChatInput" placeholder="Describe your research needs... (Click mic to speak)" autocomplete="off" rows="1"></textarea>
+<button class="voice-btn" id="researchVoiceBtn" onclick="toggleVoice('research')" title="Click to speak"><i class="fas fa-microphone"></i></button>
+<button id="sendResearchChat" class="btn-primary"><i class="fas fa-paper-plane"></i></button>
+</div>
+<div class="chat-options">
+<div class="chat-options-left">
+<div class="memory-indicator" id="researchMemoryIndicator" style="display:none;"><i class="fas fa-brain"></i> <span id="researchMemoryCount">0</span> msgs</div>
+</div>
+<div>
+<button class="btn-secondary" id="clearResearchBtn" onclick="clearResearchChat()"><i class="fas fa-trash-alt"></i> New Topic</button>
+</div>
+</div>
+</div>
+</div>
+<div class="research-output" id="researchOutput">
+<div class="output-header">
+<h3><i class="fas fa-file-alt"></i> Research Paper</h3>
+<div class="output-actions">
+<button class="btn-secondary" id="copyResearch"><i class="fas fa-copy"></i> Copy</button>
+<button class="btn-secondary" id="downloadResearch"><i class="fas fa-download"></i> Download TXT</button>
+<button class="btn-secondary" id="downloadResearchPDF" onclick="downloadResearchPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+</div>
+</div>
+<div class="research-content" id="researchContent"></div>
+<div class="references-section">
+<h4><i class="fas fa-link"></i> Sources & References</h4>
+<ul id="referencesList"></ul>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+
+<a href="#" class="telegram-float" id="telegramFloat" target="_blank">
+<i class="fab fa-telegram"></i><span id="telegramFloatText">Join our channel</span>
+</a>
+
+<footer class="footer">
+<p>MediAI Pro - All Rights Reserved</p>
+<p class="disclaimer">This website is for educational purposes only. Not a substitute for professional medical advice.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";</script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ===== FIREBASE =====
+const firebaseConfig = {
+  apiKey: "AIzaSyA2WUqN7St6hOwRitd15nNwB3aZgFpAnKQ",
+  authDomain: "mediai-pro-28e98.firebaseapp.com",
+  projectId: "mediai-pro-28e98",
+  storageBucket: "mediai-pro-28e98.firebasestorage.app",
+  messagingSenderId: "707124052727",
+  appId: "1:707124052727:web:022e7db8087e80a9cb09f2"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
+let siteSettings = {telegramLink:'',telegramText:'Join our channel',telegramVisible:true,apiKey:'',apiModel:'gemini-2.5-flash',pubmedApiKey:'',enableEuropePMC:true,enablePubMed:false};
+let apiKeysList = [];
+let responseCache = new Map();
+const CACHE_MAX_SIZE = 50;
+let chatHistory = [];
+let researchHistory = [];
+let pdfChatHistory = [];
+let currentPdfText = '';
+let currentPdfName = '';
+let quizQuestions = [];
+let currentQuizIndex = 0;
+let quizScore = 0;
+let quizAnswers = [];
+const MAX_HISTORY = 100;
+
+const DEPRECATED_MODELS = {
+  'gemini-pro': 'gemini-2.5-flash',
+  'gemini-1.5-pro': 'gemini-2.5-flash',
+  'gemini-1.5-flash': 'gemini-2.5-flash',
+  'gemini-1.5-flash-latest': 'gemini-2.5-flash',
+  'gemini-flash-latest': 'gemini-2.5-flash',
+  'gemini-2.0-flash': 'gemini-2.5-flash'
+};
+
+function fixModelName(model) {
+  if(DEPRECATED_MODELS[model]) return DEPRECATED_MODELS[model];
+  return model || 'gemini-2.5-flash';
+}
+
+const API_BASE = '/api/gemini';
+function getModelUrl() { return API_BASE; }
+
+// ===== VOICE RECOGNITION =====
+let recognition = null;
+let currentVoiceTarget = null;
+
+function initVoiceRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    console.log('Voice recognition not supported in this browser');
+    return null;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SpeechRecognition();
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  rec.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    if (currentVoiceTarget === 'chat') {
+      const el = document.getElementById('chatInput');
+      el.value = (el.value ? el.value + ' ' : '') + transcript;
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 280) + 'px';
+    } else if (currentVoiceTarget === 'pdfchat') {
+      const el = document.getElementById('pdfChatInput');
+      el.value = (el.value ? el.value + ' ' : '') + transcript;
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 280) + 'px';
+    } else if (currentVoiceTarget === 'research') {
+      const el = document.getElementById('researchChatInput');
+      el.value = (el.value ? el.value + ' ' : '') + transcript;
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 280) + 'px';
+    }
+  };
+
+  rec.onerror = function(event) {
+    console.error('Voice recognition error:', event.error);
+    stopVoiceRecording();
+    if (event.error === 'not-allowed') {
+      alert('Please allow microphone access to use voice chat.');
+    }
+  };
+
+  rec.onend = function() {
+    stopVoiceRecording();
+    // Auto-send the message after voice ends
+    setTimeout(() => {
+      if (currentVoiceTarget === 'chat') {
+        document.getElementById('sendChat').click();
+      } else if (currentVoiceTarget === 'pdfchat') {
+        document.getElementById('sendPdfChat').click();
+      } else if (currentVoiceTarget === 'research') {
+        document.getElementById('sendResearchChat').click();
+      }
+    }, 300);
+  };
+
+  return rec;
+}
+
+function toggleVoice(target) {
+  if (!recognition) {
+    recognition = initVoiceRecognition();
+    if (!recognition) {
+      alert('Voice recognition is not supported in your browser. Please use Chrome or Edge.');
+      return;
+    }
+  }
+
+  const btnId = target === 'chat' ? 'chatVoiceBtn' : target === 'pdfchat' ? 'pdfChatVoiceBtn' : 'researchVoiceBtn';
+  const btn = document.getElementById(btnId);
+
+  if (btn.classList.contains('recording')) {
+    recognition.stop();
+    stopVoiceRecording();
+  } else {
+    currentVoiceTarget = target;
+    btn.classList.add('recording');
+    btn.innerHTML = '<i class="fas fa-stop"></i>';
+
+    // Try Arabic first, fallback to English
+    recognition.lang = 'ar-SA';
+    try {
+      recognition.start();
+    } catch(e) {
+      recognition.lang = 'en-US';
+      try {
+        recognition.start();
+      } catch(e2) {
+        stopVoiceRecording();
+        alert('Could not start voice recording. Please try again.');
+      }
+    }
+  }
+}
+
+function stopVoiceRecording() {
+  document.querySelectorAll('.voice-btn').forEach(btn => {
+    btn.classList.remove('recording');
+    btn.innerHTML = '<i class="fas fa-microphone"></i>';
+  });
+}
+
+// ===== DOM ELEMENTS =====
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendChat = document.getElementById('sendChat');
+const researchMessages = document.getElementById('researchMessages');
+const researchChatInput = document.getElementById('researchChatInput');
+const sendResearchChat = document.getElementById('sendResearchChat');
+const researchContent = document.getElementById('researchContent');
+const referencesList = document.getElementById('referencesList');
+const researchOutput = document.getElementById('researchOutput');
+const pdfChatMessages = document.getElementById('pdfChatMessages');
+const pdfChatInput = document.getElementById('pdfChatInput');
+const sendPdfChat = document.getElementById('sendPdfChat');
+
+// ===== THEME =====
+const themeToggle = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  htmlEl.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
+}
+function toggleTheme() {
+  const current = htmlEl.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  htmlEl.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  themeToggle.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+themeToggle.addEventListener('click', toggleTheme);
+
+// ===== NAVIGATION =====
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = link.getAttribute('href');
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.querySelector(target).style.display = 'block';
+    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+document.querySelector('#chat').style.display = 'block';
+
+// ===== AUTH STATE =====
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+});
+
+// ===== SETTINGS =====
+async function loadSettings() {
+  try {
+    const doc = await db.collection('settings').doc('site').get();
+    if(doc.exists) {
+      siteSettings = {...siteSettings, ...doc.data()};
+      siteSettings.apiModel = fixModelName(siteSettings.apiModel);
+      if(siteSettings.apiKeys && Array.isArray(siteSettings.apiKeys)) {
+        apiKeysList = siteSettings.apiKeys.filter(k => k && k.trim());
+      } else if(siteSettings.apiKey) {
+        apiKeysList = [siteSettings.apiKey];
+      }
+      if(siteSettings.enableEuropePMC !== undefined) siteSettings.enableEuropePMC = siteSettings.enableEuropePMC;
+      if(siteSettings.enablePubMed !== undefined) siteSettings.enablePubMed = siteSettings.enablePubMed;
+    }
+    updateTelegramFloat();
+  } catch(e) { console.error('Settings load error:', e); }
+}
+
+function getApiKeys() {
+  if(apiKeysList.length > 0) return apiKeysList;
+  const local = localStorage.getItem('gemini_api_key');
+  if(local) return [local];
+  return [];
+}
+
+function updateTelegramFloat() {
+  const float = document.getElementById('telegramFloat');
+  const text = document.getElementById('telegramFloatText');
+  if(siteSettings.telegramVisible && siteSettings.telegramLink) {
+    float.href = siteSettings.telegramLink;
+    float.style.display = 'flex';
+    text.textContent = siteSettings.telegramText;
+  } else {
+    float.style.display = 'none';
+  }
+}
+
+function setupAutoResize(textarea) {
+  textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 280) + 'px';
+  });
+  textarea.addEventListener('keydown', function(e) {
+    if(e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const btn = this.parentElement.querySelector('button:not(.voice-btn)');
+      if(btn) btn.click();
+    }
+  });
+}
+
+// ===== STREAMING API CALL =====
+async function streamApiCall(payload, onChunk, onDone, onError) {
+  const keys = getApiKeys();
+  const body = {...payload, stream: true};
+  if(keys.length > 0) body.apiKeys = keys;
+
+  // Check payload size - if too large, trim contents
+  const payloadStr = JSON.stringify(body);
+  if (payloadStr.length > 300000) {
+    console.warn('Payload too large (' + payloadStr.length + ' chars), trimming...');
+    // Trim the last content item (usually the source context)
+    if (body.contents && body.contents.length > 2) {
+      const lastIdx = body.contents.length - 1;
+      const text = body.contents[lastIdx].parts?.[0]?.text || '';
+      if (text.length > 5000) {
+        body.contents[lastIdx].parts[0].text = text.substring(0, 5000) + '\n[Content truncated due to size limits]';
+      }
+    }
+  }
+
+  let jsonBody;
+  try {
+    jsonBody = JSON.stringify(body);
+  } catch (e) {
+    onError('Failed to serialize request: ' + e.message);
+    return;
+  }
+
+  const TIMEOUT_MS = 30000;
+  let lastChunkTime = Date.now();
+  let hasReceivedData = false;
+
+  try {
+    const res = await fetch(getModelUrl(), {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: jsonBody
+    });
+
+    if(!res.ok) {
+      const errText = await res.text().catch(() => '');
+      let errData = {};
+      try { errData = JSON.parse(errText); } catch(e) {}
+      throw new Error(errData.error || errData.message || ('HTTP ' + res.status + ': ' + errText.substring(0, 200)));
+    }
+
+    if(!res.body) {
+      throw new Error('No response body received');
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while(true) {
+      const { done, value } = await reader.read();
+      if(done) break;
+
+      lastChunkTime = Date.now();
+      const chunk = decoder.decode(value, { stream: true });
+      buffer += chunk;
+
+      const lines = buffer.split(/\r?\n/);
+      buffer = lines.pop() || '';
+
+      for(const line of lines) {
+        const trimmed = line.trim();
+        if(!trimmed) continue;
+
+        let dataStr = trimmed;
+        if(trimmed.startsWith('data: ')) {
+          dataStr = trimmed.slice(6);
+        }
+
+        if(dataStr === '[DONE]') {
+          onDone();
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(dataStr);
+          if(parsed.error) {
+            onError(typeof parsed.error === 'string' ? parsed.error : (parsed.error.message || 'Unknown error'));
+            return;
+          }
+
+          if(parsed.choices && parsed.choices[0] && parsed.choices[0].delta) {
+            const text = parsed.choices[0].delta.content || '';
+            if(text) { hasReceivedData = true; onChunk(text); }
+          }
+          else if(parsed.candidates && parsed.candidates[0] && parsed.candidates[0].content) {
+            const text = parsed.candidates[0].content.parts[0]?.text || '';
+            if(text) { hasReceivedData = true; onChunk(text); }
+          }
+          else if(parsed.text) {
+            hasReceivedData = true; onChunk(parsed.text);
+          }
+        } catch(e) {}
+      }
+
+      if(Date.now() - lastChunkTime > TIMEOUT_MS) {
+        throw new Error('Stream timeout - no data received for ' + (TIMEOUT_MS/1000) + ' seconds');
+      }
+    }
+
+    if(buffer.trim()) {
+      try {
+        const parsed = JSON.parse(buffer.trim());
+        if(parsed.text) onChunk(parsed.text);
+        else if(parsed.choices && parsed.choices[0] && parsed.choices[0].delta) {
+          const text = parsed.choices[0].delta.content || '';
+          if(text) onChunk(text);
+        }
+      } catch(e) {}
+    }
+
+    onDone();
+
+  } catch(err) {
+    onError(err.message);
+  }
+}
+
+// ===== FALLBACK NON-STREAMING CALL =====
+async function fallbackApiCall(payload) {
+  const keys = getApiKeys();
+  const body = {...payload};
+  delete body.stream;
+  if(keys.length > 0) body.apiKeys = keys;
+
+  // Check payload size
+  const payloadStr = JSON.stringify(body);
+  if (payloadStr.length > 300000) {
+    console.warn('Payload too large (' + payloadStr.length + ' chars), trimming...');
+    if (body.contents && body.contents.length > 2) {
+      const lastIdx = body.contents.length - 1;
+      const text = body.contents[lastIdx].parts?.[0]?.text || '';
+      if (text.length > 5000) {
+        body.contents[lastIdx].parts[0].text = text.substring(0, 5000) + '\n[Content truncated]';
+      }
+    }
+  }
+
+  let jsonBody;
+  try {
+    jsonBody = JSON.stringify(body);
+  } catch (e) {
+    throw new Error('Failed to serialize request: ' + e.message);
+  }
+
+  const res = await fetch(getModelUrl(), {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: jsonBody
+  });
+
+  if(!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error('HTTP ' + res.status + ': ' + errText.substring(0, 200));
+  }
+
+  const data = await res.json();
+  if(data.error) {
+    throw new Error(typeof data.error === 'string' ? data.error : (data.error.message || 'API error'));
+  }
+
+  let text = '';
+  if(data.candidates && data.candidates[0] && data.candidates[0].content) {
+    text = data.candidates[0].content.parts[0]?.text || '';
+  } else if(data.choices && data.choices[0] && data.choices[0].message) {
+    text = data.choices[0].message.content || '';
+  }
+  return text;
+}
+
+initTheme();
+loadSettings();
+
+// ===== SCROLL EFFECTS =====
+window.addEventListener('scroll', () => {
+  const st = document.documentElement.scrollTop || document.body.scrollTop;
+  const sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('scrollProgress').style.width = (st / sh * 100) + '%';
+});
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('scroll-visible'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.scroll-hidden').forEach(el => observer.observe(el));
+window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar');
+  navbar.style.boxShadow = window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.1)' : 'none';
+});
+
+// ===== SOURCE APIs =====
+function validateDoi(doi) {
+  if(!doi) return null;
+  const clean = doi.trim().replace(/^doi:/i, '').replace(/^https?:\/\/doi\.org\//i, '');
+  if(clean.length < 5) return null;
+  if(!/^10\.\d{4,}\/.*/.test(clean)) return null;
+  return clean;
+}
+
+function validatePmid(pmid) {
+  if(!pmid) return null;
+  const clean = String(pmid).trim().replace(/\D/g, '');
+  if(clean.length < 3 || clean.length > 10) return null;
+  return clean;
+}
+
+function buildSourceLink(paper) {
+  if(paper.directUrl && paper.directUrl.startsWith('http')) return paper.directUrl;
+  if(paper.url && paper.url.startsWith('http')) return paper.url;
+  const doi = validateDoi(paper.doi);
+  const pmid = validatePmid(paper.pmid);
+  if(pmid) return 'https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/';
+  if(doi) return 'https://doi.org/' + doi;
+  return null;
+}
+
+function cleanMedicalQuery(query) {
+  return query
+    .replace(/[^a-zA-Z0-9\s\-\+\.\,\(\)\[\]]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 200);
+}
+
+async function searchAllMedicalSources(query) {
+  try {
+    const res = await fetch('/api/search', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        query: query,
+        enableEuropePMC: siteSettings.enableEuropePMC !== false,
+        enablePubMed: siteSettings.enablePubMed,
+        pubmedApiKey: siteSettings.pubmedApiKey
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('Search API error:', err.error || res.status);
+      return [];
+    }
+    const data = await res.json();
+    const sources = data.sources || [];
+
+    // Log relevance info for debugging
+    if (sources.length > 0) {
+      console.log('Found', sources.length, 'sources for query:', query);
+      sources.forEach((s, i) => {
+        console.log(`Source ${i+1}: [${s.source}] score=${s.score} rel=${s.relevanceScore} "${s.title.substring(0,80)}..."`);
+      });
+    } else {
+      console.log('No sources found for query:', query);
+    }
+
+    return sources;
+  } catch (e) {
+    console.error('Search failed:', e.message);
+    return [];
+  }
+}
+
+// ===== CITATION VERIFICATION (light) =====
+function verifyCitations(responseText, sources) {
+  // Only remove citations that exceed the source count
+  const citationRegex = /\[(\d+)\]/g;
+  const citations = [];
+  let match;
+  while ((match = citationRegex.exec(responseText)) !== null) {
+    citations.push(parseInt(match[1]));
+  }
+
+  const maxValid = sources.length;
+  const invalidCitations = citations.filter(n => n < 1 || n > maxValid);
+
+  if (invalidCitations.length > 0) {
+    console.warn('Invalid citations found:', invalidCitations, 'Max valid:', maxValid);
+    return {
+      valid: false,
+      invalid: invalidCitations,
+      maxValid: maxValid
+    };
+  }
+
+  return { valid: true, citations: [...new Set(citations)] };
+}
+
+function buildSourceContext(sources) {
+  if (!sources || sources.length === 0) return '';
+
+  // Only top 3 sources, minimal info
+  const topSources = sources.slice(0, 3);
+
+  let context = '\n\nREFERENCES:\n';
+  topSources.forEach((s, i) => {
+    context += '[' + (i + 1) + '] ' + (s.title || 'Unknown').substring(0, 100) + ' (' + (s.source || 'DB') + ')\n';
+  });
+  context += 'END.\n';
+  return context;
+}
+
+// ===== MEMORY FUNCTIONS =====
+function updateMemoryIndicator() {
+  const indicator = document.getElementById('memoryIndicator');
+  const count = document.getElementById('memoryCount');
+  if(chatHistory.length > 0) {
+    indicator.style.display = 'flex';
+    count.textContent = chatHistory.length;
+  } else {
+    indicator.style.display = 'none';
+  }
+}
+
+function updateResearchMemoryIndicator() {
+  const indicator = document.getElementById('researchMemoryIndicator');
+  const count = document.getElementById('researchMemoryCount');
+  if(researchHistory.length > 0) {
+    indicator.style.display = 'flex';
+    count.textContent = researchHistory.length;
+  } else {
+    indicator.style.display = 'none';
+  }
+}
+
+function clearChat() {
+  if(confirm('Start a new topic? This will clear the current conversation.')) {
+    chatHistory = [];
+    document.getElementById('chatMessages').innerHTML = '';
+    updateMemoryIndicator();
+  }
+}
+
+function clearResearchChat() {
+  if(confirm('Start a new research topic? This will clear the current conversation.')) {
+    researchHistory = [];
+    document.getElementById('researchMessages').innerHTML = '';
+    document.getElementById('researchOutput').style.display = 'none';
+    updateResearchMemoryIndicator();
+  }
+}
+
+function clearPdfChat() {
+  if(confirm('Clear document and conversation?')) {
+    currentPdfText = '';
+    currentPdfName = '';
+    pdfChatHistory = [];
+    document.getElementById('pdfChatMessages').innerHTML = '';
+    document.getElementById('pdfChatLoaded').style.display = 'none';
+    document.getElementById('pdfChatUploadArea').style.display = 'block';
+    document.getElementById('pdfChatTextInput').style.display = 'block';
+    document.getElementById('pdfChatPastedText').value = '';
+  }
+}
+
+// ===== MARKDOWN PROCESSOR =====
+function processMarkdown(text) {
+  let html = text
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^#{6}\s*(.+)$/gm, '<div style="font-size:0.9rem;color:var(--text-secondary);font-weight:600;margin:0.5rem 0;">$1</div>')
+    .replace(/^#{5}\s*(.+)$/gm, '<div style="font-size:0.95rem;color:var(--text-secondary);font-weight:600;margin:0.5rem 0;">$1</div>')
+    .replace(/^#{4}\s*(.+)$/gm, '<div style="font-size:1rem;color:var(--primary);font-weight:700;margin:0.8rem 0 0.4rem;">$1</div>')
+    .replace(/^#{3}\s*(.+)$/gm, '<div style="font-size:1.1rem;color:var(--primary);font-weight:700;margin:1rem 0 0.5rem;border-bottom:1px solid var(--border);padding-bottom:0.3rem;">$1</div>')
+    .replace(/^#{2}\s*(.+)$/gm, '<div style="font-size:1.2rem;color:var(--primary);font-weight:700;margin:1.2rem 0 0.6rem;border-bottom:2px solid var(--border);padding-bottom:0.4rem;">$1</div>')
+    .replace(/^#\s*(.+)$/gm, '<div style="font-size:1.4rem;color:var(--primary);font-weight:700;margin:1.5rem 0 0.8rem;border-bottom:2px solid var(--primary);padding-bottom:0.5rem;">$1</div>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code style="background:var(--bg);padding:0.1rem 0.3rem;border-radius:4px;font-family:monospace;font-size:0.9rem;">$1</code>')
+    .replace(/^>\s*(.+)$/gm, '<div style="border-left:3px solid var(--primary);padding-left:1rem;margin:0.5rem 0;color:var(--text-secondary);font-style:italic;">$1</div>')
+    .replace(/^\s*[-*]\s+(.+)$/gm, '<li style="margin:0.2rem 0;margin-left:1rem;">$1</li>')
+    .replace(/^\s*\d+\.\s+(.+)$/gm, '<li style="margin:0.2rem 0;margin-left:1rem;list-style-type:decimal;">$1</li>')
+    .replace(/^---+/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  return html;
+}
+
+// ===== MESSAGE RENDERER WITH SOURCES =====
+function addMsg(container, text, sender, isHTML, sources) {
+  const div = document.createElement('div');
+  div.className = 'message ' + sender;
+  let content = text;
+  let sourcesHTML = '';
+
+  if(sender === 'bot' && sources && sources.length > 0) {
+    // Show sources as "References" at the bottom - clean and simple
+    sourcesHTML = '<div class="sources-section">';
+    sourcesHTML += '<div class="sources-section-title"><i class="fas fa-book-medical"></i> References</div>';
+    sources.forEach((s, idx) => {
+      const link = s.url || buildSourceLink(s);
+      if(link) {
+        sourcesHTML += '<div class="source-item">';
+        sourcesHTML += '<div class="source-num">' + (idx + 1) + '</div>';
+        sourcesHTML += '<div class="source-info">';
+        sourcesHTML += '<a href="' + link + '" target="_blank" rel="noopener noreferrer">' + (s.title || 'Source').substring(0, 120) + (s.title && s.title.length > 120 ? '...' : '') + '</a>';
+        sourcesHTML += '<div class="source-meta">' + (s.authors || 'Unknown') + ' &bull; ' + (s.journal || 'Unknown Journal') + ' &bull; ' + (s.year || 'N/A') + ' &bull; <span style="color:var(--primary);">' + (s.source || 'Medical DB') + '</span></div>';
+        sourcesHTML += '</div></div>';
+      }
+    });
+    sourcesHTML += '</div>';
+  }
+
+  if(sender === 'bot') {
+    content = processMarkdown(text);
+    isHTML = true;
+  }
+
+  div.innerHTML = '<div class="avatar"><i class="fas fa-' + (sender === 'bot' ? 'robot' : 'user') + '"></i></div><div class="content" dir="auto">' + (isHTML ? content : text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')) + sourcesHTML + '</div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping(container) {
+  const div = document.createElement('div');
+  div.className = 'message bot typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<div class="avatar"><i class="fas fa-robot"></i></div><div class="content"><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingIndicator');
+  if(el) el.remove();
+}
+
+// ===== CHAT FUNCTIONS WITH SOURCES =====
+async function sendMessage() {
+  const text = chatInput.value.trim();
+  if(!text) return;
+
+  addMsg(chatMessages, text, 'user');
+  chatHistory.push({role: 'user', text: text});
+  if(chatHistory.length > MAX_HISTORY) chatHistory.shift();
+  updateMemoryIndicator();
+
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+  chatInput.style.height = '48px';
+
+  let realSources = [];
+  const researchMode = document.getElementById('researchMode');
+  if(researchMode && researchMode.checked) {
+    showTyping(chatMessages);
+    realSources = await searchAllMedicalSources(text);
+    hideTyping();
+  }
+
+  // Build source context with abstracts
+  const sourceContext = buildSourceContext(realSources);
+
+  // Sources are always passed to AI as optional references
+  const hasRelevantSources = true; // Always allow the AI to respond
+
+  const contents = [];
+
+  // STRICT SYSTEM PROMPT - Sources ONLY
+  const systemPrompt = 'You are MediAI Pro, an expert medical AI assistant with deep medical knowledge.\n\n' +
+    'INSTRUCTIONS:\n' +
+    '1. Answer the user\'s medical question thoroughly and accurately.\n' +
+    '2. Respond in the SAME LANGUAGE as the user (Arabic or English).\n' +
+    '3. Be conversational, friendly, and professional.\n' +
+    '4. Give complete, detailed answers with clinical context.\n' +
+    '5. If sources are provided below, you MAY cite relevant ones as [N].\n' +
+    '6. NEVER use citation numbers above ' + realSources.length + '.\n' +
+    '7. If no sources match, answer from your knowledge without citations.\n' +
+    '8. Add at the end: "---\nThis information is for educational purposes. Consult a healthcare professional."';
+
+  contents.push({
+    role: 'user',
+    parts: [{text: systemPrompt + sourceContext}]
+  });
+  contents.push({
+    role: 'model',
+    parts: [{text: 'Understood. I will ONLY use the provided medical sources. I will cite only [1] through [' + realSources.length + ']. If a claim is not in the sources, I will not mention it. If no relevant sources exist, I will say so clearly.'}]
+  });
+
+  for(const msg of chatHistory.slice(-20)) {
+    contents.push({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{text: msg.text}]
+    });
+  }
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'message bot streaming-msg';
+  msgDiv.innerHTML = '<div class="avatar"><i class="fas fa-robot"></i></div><div class="content"><span class="streaming-text"></span><span class="cursor">|</span></div>';
+  chatMessages.appendChild(msgDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  const textSpan = msgDiv.querySelector('.streaming-text');
+  let fullText = '';
+  let streamingFailed = false;
+
+  if(!document.getElementById('cursor-style')) {
+    const style = document.createElement('style');
+    style.id = 'cursor-style';
+    style.textContent = '.cursor{animation:blink 1s infinite;}@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}';
+    document.head.appendChild(style);
+  }
+
+  try {
+    await streamApiCall(
+      {
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      },
+      (chunk) => {
+        fullText += chunk;
+        textSpan.textContent = fullText;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      },
+      () => {
+        msgDiv.remove();
+
+        // Verify citations
+        const verify = verifyCitations(fullText, realSources);
+        let finalText = fullText;
+
+        if (!verify.valid && realSources.length > 0) {
+          // Remove invalid citations
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+          console.warn('Removed invalid citations:', verify.invalid);
+        }
+
+        chatHistory.push({role: 'model', text: finalText});
+        if(chatHistory.length > MAX_HISTORY) chatHistory.shift();
+        updateMemoryIndicator();
+        addMsg(chatMessages, finalText, 'bot', true, realSources);
+      },
+      (error) => {
+        streamingFailed = true;
+        console.error('Stream error, will try fallback:', error);
+      }
+    );
+  } catch(err) {
+    streamingFailed = true;
+    console.error('Chat error, will try fallback:', err);
+  }
+
+  if(!streamingFailed && fullText.trim().length === 0) {
+    streamingFailed = true;
+  }
+
+  if(streamingFailed) {
+    try {
+      msgDiv.querySelector('.streaming-text').textContent = 'Loading (fallback mode)...';
+      const fallbackText = await fallbackApiCall({
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      });
+
+      msgDiv.remove();
+      if(fallbackText) {
+        // Verify citations in fallback too
+        const verify = verifyCitations(fallbackText, realSources);
+        let finalText = fallbackText;
+        if (!verify.valid && realSources.length > 0) {
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+        }
+        chatHistory.push({role: 'model', text: finalText});
+        if(chatHistory.length > MAX_HISTORY) chatHistory.shift();
+        updateMemoryIndicator();
+        addMsg(chatMessages, finalText, 'bot', true, realSources);
+      } else {
+        addMsg(chatMessages, 'Sorry, I could not generate a response. Please check your API settings or try again later.', 'bot');
+      }
+    } catch(fallbackErr) {
+      msgDiv.remove();
+      console.error('Fallback also failed:', fallbackErr);
+      addMsg(chatMessages, 'Error: ' + fallbackErr.message, 'bot');
+    }
+  }
+}
+
+// ===== RESEARCH FUNCTIONS WITH PDF EXPORT =====
+
+function formatResearchForPDF(text, refs) {
+  // Convert markdown-like text to clean HTML for PDF
+  let html = '<div style="font-family:Arial,sans-serif;line-height:1.6;color:#000;">';
+
+  // Process headers
+  let lines = text.split('\n');
+  let inList = false;
+
+  for(let line of lines) {
+    line = line.trim();
+    if(!line) {
+      html += '<br>';
+      continue;
+    }
+
+    // Headers
+    if(line.startsWith('# ')) {
+      html += '<h1 style="font-size:18px;text-align:center;margin:20px 0 10px;border-bottom:2px solid #333;padding-bottom:5px;">' + line.substring(2) + '</h1>';
+    } else if(line.startsWith('## ')) {
+      html += '<h2 style="font-size:16px;margin:15px 0 8px;border-bottom:1px solid #666;padding-bottom:3px;">' + line.substring(3) + '</h2>';
+    } else if(line.startsWith('### ')) {
+      html += '<h3 style="font-size:14px;margin:12px 0 6px;color:#333;">' + line.substring(4) + '</h3>';
+    } else if(line.startsWith('**') && line.endsWith('**')) {
+      html += '<p style="font-weight:bold;margin:8px 0;">' + line.replace(/\*\*/g, '') + '</p>';
+    } else if(line.startsWith('* ') || line.startsWith('- ')) {
+      if(!inList) { html += '<ul>'; inList = true; }
+      html += '<li>' + line.substring(2) + '</li>';
+    } else if(/^\d+\./.test(line)) {
+      if(!inList) { html += '<ol>'; inList = true; }
+      html += '<li>' + line.replace(/^\d+\.\s*/, '') + '</li>';
+    } else {
+      if(inList) { html += inList ? '</ul>' : '</ol>'; inList = false; }
+      html += '<p style="margin:6px 0;text-align:justify;">' + line.replace(/\*\*/g, '<strong>').replace(/\*/g, '<em>') + '</p>';
+    }
+  }
+  if(inList) html += '</ul>';
+
+  // References section
+  if(refs && refs.length > 0) {
+    html += '<div style="margin-top:30px;border-top:2px solid #333;padding-top:15px;">';
+    html += '<h2 style="font-size:16px;margin-bottom:10px;">References</h2>';
+    html += '<ol>';
+    refs.forEach(ref => {
+      html += '<li style="margin:5px 0;font-size:11px;">' + ref + '</li>';
+    });
+    html += '</ol></div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function downloadResearchPDF() {
+  const content = document.getElementById('researchContent');
+  const refs = [];
+  document.querySelectorAll('#referencesList li').forEach(li => {
+    refs.push(li.innerText);
+  });
+
+  const text = content.innerText;
+  const pdfHTML = formatResearchForPDF(text, refs);
+
+  const element = document.createElement('div');
+  element.innerHTML = pdfHTML;
+  element.style.padding = '20px';
+  element.style.background = 'white';
+  document.body.appendChild(element);
+
+  const opt = {
+    margin: [15, 15, 15, 15],
+    filename: 'MediAI-Research-Paper.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    document.body.removeChild(element);
+  });
+}
+
+async function sendResearchMessage() {
+  const text = researchChatInput.value.trim();
+  if(!text) return;
+
+  addMsg(researchMessages, text, 'user');
+  researchHistory.push({role: 'user', text: text});
+  if(researchHistory.length > MAX_HISTORY) researchHistory.shift();
+  updateResearchMemoryIndicator();
+
+  researchChatInput.value = '';
+  researchChatInput.style.height = 'auto';
+  researchChatInput.style.height = '48px';
+
+  let realSources = [];
+  showTyping(researchMessages);
+  try {
+    realSources = await searchAllMedicalSources(text);
+  } catch(e) {
+    console.error('Search error:', e);
+  }
+  hideTyping();
+
+  const sourceContext = buildSourceContext(realSources);
+  const srcCount = realSources.length;
+
+  const contents = [];
+
+  let sysText = 'You are MediAI Pro Research Assistant, an expert medical research writer.';
+  sysText += ' Write a thorough, well-structured medical research paper.';
+  if (srcCount > 0) {
+    sysText += ' Cite sources using [1] to [' + srcCount + '] if relevant.';
+  }
+  sysText += ' Write in the SAME LANGUAGE as the user.';
+  sysText += ' End with: --- For educational purposes. Verify before publication.';
+  sysText += sourceContext;
+
+  contents.push({
+    role: 'user',
+    parts: [{text: sysText}]
+  });
+  contents.push({
+    role: 'model',
+    parts: [{text: 'Understood. I will write a thorough research paper.'}]
+  });
+
+  for(const msg of researchHistory.slice(-10)) {
+    contents.push({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{text: msg.text}]
+    });
+  }
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'message bot streaming-msg';
+  msgDiv.innerHTML = '<div class="avatar"><i class="fas fa-robot"></i></div><div class="content"><span class="streaming-text"></span><span class="cursor">|</span></div>';
+  researchMessages.appendChild(msgDiv);
+  researchMessages.scrollTop = researchMessages.scrollHeight;
+
+  const textSpan = msgDiv.querySelector('.streaming-text');
+  let fullText = '';
+  let streamingFailed = false;
+
+  try {
+    await streamApiCall(
+      {
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      },
+      (chunk) => {
+        fullText += chunk;
+        textSpan.textContent = fullText;
+        researchMessages.scrollTop = researchMessages.scrollHeight;
+      },
+      () => {
+        msgDiv.remove();
+
+        // Verify citations
+        const verify = verifyCitations(fullText, realSources);
+        let finalText = fullText;
+        if (!verify.valid && realSources.length > 0) {
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+        }
+
+        researchHistory.push({role: 'model', text: finalText});
+        if(researchHistory.length > MAX_HISTORY) researchHistory.shift();
+        updateResearchMemoryIndicator();
+
+        addMsg(researchMessages, 'Your research paper is ready! Scroll down to view.', 'bot');
+
+        const refPatterns = /(References?:|Sources?:|Bibliography:?)/i;
+        const parts = fullText.split(refPatterns);
+        const mainContent = parts[0];
+        const refsText = parts.length > 1 ? parts.slice(1).join('') : '';
+
+        const urlRegex = /https?:\/\/[^\s<"]+/g;
+        const refs = [];
+        if(refsText) {
+          const lines = refsText.split('\n').filter(l => l.trim());
+          lines.forEach(line => {
+            const urls = line.match(urlRegex);
+            if(urls && urls.length > 0) {
+              const cleanUrl = urls[0].replace(/[.,;:!?)$]+$/, '');
+              const displayText = line.replace(urlRegex, '').trim() || 'Reference';
+              refs.push('<li><a href="' + cleanUrl + '" target="_blank" rel="noopener noreferrer">' + displayText.substring(0, 200) + '</a></li>');
+            } else if(line.trim()) {
+              refs.push('<li>' + line.trim() + '</li>');
+            }
+          });
+        }
+
+        researchContent.innerHTML = processMarkdown(mainContent);
+        referencesList.innerHTML = refs.length > 0 ? refs.join('') : '<li>No sources with URLs found</li>';
+        researchOutput.style.display = 'block';
+        researchOutput.scrollIntoView({behavior: 'smooth', block: 'start'});
+      },
+      (error) => {
+        streamingFailed = true;
+        console.error('Research stream error, will try fallback:', error);
+      }
+    );
+  } catch(err) {
+    streamingFailed = true;
+    console.error('Research error, will try fallback:', err);
+  }
+
+  if(!streamingFailed && fullText.trim().length === 0) {
+    streamingFailed = true;
+  }
+
+  if(streamingFailed) {
+    try {
+      msgDiv.querySelector('.streaming-text').textContent = 'Loading (fallback mode)...';
+      const fallbackText = await fallbackApiCall({
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      });
+
+      msgDiv.remove();
+      if(fallbackText) {
+        const verify = verifyCitations(fallbackText, realSources);
+        let finalText = fallbackText;
+        if (!verify.valid && realSources.length > 0) {
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+        }
+        researchHistory.push({role: 'model', text: finalText});
+        if(researchHistory.length > MAX_HISTORY) researchHistory.shift();
+        updateResearchMemoryIndicator();
+        addMsg(researchMessages, finalText, 'bot');
+      } else {
+        addMsg(researchMessages, 'Sorry, I could not generate a response. Please check your API settings or try again later.', 'bot');
+      }
+    } catch(fallbackErr) {
+      msgDiv.remove();
+      addMsg(researchMessages, 'Error: ' + fallbackErr.message, 'bot');
+    }
+  }
+}
+
+// ===== PDF CHAT FUNCTIONALITY =====
+
+async function extractPdfText(file) {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+    let fullText = '';
+
+    for(let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map(item => item.str).join(' ');
+      fullText += pageText + '\n\n';
+    }
+
+    return fullText.trim();
+  } catch(e) {
+    console.error('PDF extraction error:', e);
+    throw new Error('Failed to read PDF: ' + e.message);
+  }
+}
+
+function readTextFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (e) => reject(new Error('Failed to read file'));
+    reader.readAsText(file);
+  });
+}
+
+async function handlePdfChatUpload(file) {
+  try {
+    let text = '';
+    let name = file.name;
+
+    if(file.type === 'text/plain' || file.name.endsWith('.txt')) {
+      text = await readTextFile(file);
+    } else {
+      text = await extractPdfText(file);
+    }
+
+    if(!text || text.trim().length < 50) {
+      alert('File appears to be empty or has very little text. Please try another file.');
+      return;
+    }
+
+    currentPdfText = text;
+    currentPdfName = name;
+    pdfChatHistory = [];
+
+    document.getElementById('pdfChatUploadArea').style.display = 'none';
+    document.getElementById('pdfChatTextInput').style.display = 'none';
+    document.getElementById('pdfChatLoaded').style.display = 'block';
+    document.getElementById('pdfChatFileName').textContent = name;
+    document.getElementById('pdfChatCharCount').textContent = text.length.toLocaleString() + ' chars';
+
+    addMsg(pdfChatMessages, 'Document loaded successfully! I have analyzed "' + name + '" (' + text.length.toLocaleString() + ' characters). You can now ask me anything about this document. I will also cross-check with medical sources when needed.', 'bot');
+
+  } catch(e) {
+    alert('Error loading file: ' + e.message);
+  }
+}
+
+async function handlePastedText() {
+  const text = document.getElementById('pdfChatPastedText').value.trim();
+  if(!text || text.length < 50) {
+    alert('Please enter at least 50 characters of medical text.');
+    return;
+  }
+
+  currentPdfText = text;
+  currentPdfName = 'Pasted Text';
+  pdfChatHistory = [];
+
+  document.getElementById('pdfChatUploadArea').style.display = 'none';
+  document.getElementById('pdfChatTextInput').style.display = 'none';
+  document.getElementById('pdfChatLoaded').style.display = 'block';
+  document.getElementById('pdfChatFileName').textContent = 'Pasted Text';
+  document.getElementById('pdfChatCharCount').textContent = text.length.toLocaleString() + ' chars';
+
+  addMsg(pdfChatMessages, 'Text loaded successfully! I have analyzed your input (' + text.length.toLocaleString() + ' characters). You can now ask me anything about it. I will also cross-check with medical sources when needed.', 'bot');
+}
+
+async function sendPdfChatMessage() {
+  const text = pdfChatInput.value.trim();
+  if(!text) return;
+
+  if(!currentPdfText) {
+    alert('Please upload a document or paste text first.');
+    return;
+  }
+
+  addMsg(pdfChatMessages, text, 'user');
+  pdfChatHistory.push({role: 'user', text: text});
+  if(pdfChatHistory.length > MAX_HISTORY) pdfChatHistory.shift();
+
+  pdfChatInput.value = '';
+  pdfChatInput.style.height = 'auto';
+  pdfChatInput.style.height = '48px';
+
+  let realSources = [];
+  const pdfResearchMode = document.getElementById('pdfResearchMode');
+  if(pdfResearchMode && pdfResearchMode.checked) {
+    showTyping(pdfChatMessages);
+    try {
+      realSources = await searchAllMedicalSources(text);
+    } catch(e) {
+      console.error('Search error:', e);
+    }
+    hideTyping();
+  }
+
+  const sourceContext = buildSourceContext(realSources);
+  const srcCount = realSources.length;
+  const maxDocLength = 6000;
+  const docText = currentPdfText.length > maxDocLength 
+    ? currentPdfText.substring(0, maxDocLength) + '\n[Document truncated...]' 
+    : currentPdfText;
+
+  const contents = [];
+
+  let sysText = 'You are MediAI Pro, a medical AI assistant analyzing a document.';
+  sysText += ' Use the document as your PRIMARY source. Answer thoroughly.';
+  if (srcCount > 0) {
+    sysText += ' Cite sources using [1] to [' + srcCount + '] if relevant.';
+  }
+  sysText += ' Respond in the SAME LANGUAGE as the user.';
+  sysText += sourceContext;
+  sysText += '\n\nDOCUMENT CONTENT:\n\n' + docText;
+
+  contents.push({
+    role: 'user',
+    parts: [{text: sysText}]
+  });
+  contents.push({
+    role: 'model',
+    parts: [{text: 'Understood. I will analyze the document and answer your questions.'}]
+  });
+
+  for(const msg of pdfChatHistory.slice(-8)) {
+    contents.push({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{text: msg.text}]
+    });
+  }
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'message bot streaming-msg';
+  msgDiv.innerHTML = '<div class="avatar"><i class="fas fa-robot"></i></div><div class="content"><span class="streaming-text"></span><span class="cursor">|</span></div>';
+  pdfChatMessages.appendChild(msgDiv);
+  pdfChatMessages.scrollTop = pdfChatMessages.scrollHeight;
+
+  const textSpan = msgDiv.querySelector('.streaming-text');
+  let fullText = '';
+  let streamingFailed = false;
+
+  try {
+    await streamApiCall(
+      {
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      },
+      (chunk) => {
+        fullText += chunk;
+        textSpan.textContent = fullText;
+        pdfChatMessages.scrollTop = pdfChatMessages.scrollHeight;
+      },
+      () => {
+        msgDiv.remove();
+        const verify = verifyCitations(fullText, realSources);
+        let finalText = fullText;
+        if (!verify.valid && realSources.length > 0) {
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+        }
+        pdfChatHistory.push({role: 'model', text: finalText});
+        if(pdfChatHistory.length > MAX_HISTORY) pdfChatHistory.shift();
+        addMsg(pdfChatMessages, finalText, 'bot', true, realSources);
+      },
+      (error) => {
+        streamingFailed = true;
+        console.error('PDF Chat stream error, will try fallback:', error);
+      }
+    );
+  } catch(err) {
+    streamingFailed = true;
+    console.error('PDF Chat error, will try fallback:', err);
+  }
+
+  if(!streamingFailed && fullText.trim().length === 0) {
+    streamingFailed = true;
+  }
+
+  if(streamingFailed) {
+    try {
+      msgDiv.querySelector('.streaming-text').textContent = 'Loading (fallback mode)...';
+      const fallbackText = await fallbackApiCall({
+        model: fixModelName(siteSettings.apiModel),
+        contents: contents,
+        generationConfig: {temperature: 0.2, maxOutputTokens: 8192}
+      });
+
+      msgDiv.remove();
+      if(fallbackText) {
+        const verify = verifyCitations(fallbackText, realSources);
+        let finalText = fallbackText;
+        if (!verify.valid && realSources.length > 0) {
+          verify.invalid.forEach(badNum => {
+            finalText = finalText.replace(new RegExp('\\[' + badNum + '\\]', 'g'), '');
+          });
+        }
+        pdfChatHistory.push({role: 'model', text: finalText});
+        if(pdfChatHistory.length > MAX_HISTORY) pdfChatHistory.shift();
+        addMsg(pdfChatMessages, finalText, 'bot', true, realSources);
+      } else {
+        addMsg(pdfChatMessages, 'Sorry, I could not generate a response. Please check your API settings or try again later.', 'bot');
+      }
+    } catch(fallbackErr) {
+      msgDiv.remove();
+      addMsg(pdfChatMessages, 'Error: ' + fallbackErr.message, 'bot');
+    }
+  }
+}
+
+// ===== QUIZ FUNCTIONALITY =====
+
+async function handleQuizPdfUpload(file) {
+  try {
+    const text = await extractPdfText(file);
+    if(!text || text.trim().length < 100) {
+      alert('PDF appears to be empty or has very little text. Please try another file.');
+      return;
+    }
+
+    window.quizPdfText = text;
+    document.getElementById('uploadArea').style.display = 'none';
+    document.getElementById('quizSettings').style.display = 'block';
+
+  } catch(e) {
+    alert('Error reading PDF: ' + e.message);
+  }
+}
+
+async function generateQuiz() {
+  const text = window.quizPdfText || '';
+  if(!text) {
+    alert('Please upload a PDF first.');
+    return;
+  }
+
+  const count = parseInt(document.getElementById('questionCount').value) || 10;
+  const difficulty = document.getElementById('difficulty').value || 'uworld';
+
+  const btn = document.getElementById('generateQuiz');
+  btn.innerHTML = '<span class="spinner"></span> Generating...';
+  btn.disabled = true;
+
+  const maxText = 12000;
+  const truncatedText = text.length > maxText ? text.substring(0, maxText) + '...' : text;
+
+  const prompt = `You are a medical education expert. Based on the following medical text, generate EXACTLY ${count} USMLE/UWorld-style multiple choice questions.
+
+DIFFICULTY: ${difficulty}
+
+RULES:
+1. Each question must have exactly 5 answer choices (A, B, C, D, E)
+2. Only ONE correct answer per question
+3. Include detailed explanations for why the correct answer is right AND why each wrong answer is wrong
+4. Questions should test understanding, not just memorization
+5. Use clinical vignettes and scenarios where possible
+6. Format as valid JSON
+
+TEXT TO BASE QUESTIONS ON:
+${truncatedText}
+
+OUTPUT FORMAT (strict JSON):
+{
+  "questions": [
+    {
+      "question": "Question text here...",
+      "options": ["Option A", "Option B", "Option C", "Option D", "Option E"],
+      "correctIndex": 0,
+      "explanation": "Detailed explanation here..."
+    }
+  ]
+}
+
+Generate exactly ${count} questions. Return ONLY valid JSON, no markdown formatting.`;
+
+  try {
+    const res = await fallbackApiCall({
+      model: fixModelName(siteSettings.apiModel),
+      contents: [{parts: [{text: prompt}]}],
+      generationConfig: {temperature: 0.3, maxOutputTokens: 8192}
+    });
+
+    let responseText = res;
+    if(typeof res === 'object' && res.candidates && res.candidates[0] && res.candidates[0].content) {
+      responseText = res.candidates[0].content.parts[0]?.text || '';
+    }
+
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) {
+      throw new Error('Invalid response format from AI');
+    }
+
+    const quizData = JSON.parse(jsonMatch[0]);
+
+    if(!quizData.questions || !Array.isArray(quizData.questions) || quizData.questions.length === 0) {
+      throw new Error('No questions generated');
+    }
+
+    quizQuestions = quizData.questions;
+    currentQuizIndex = 0;
+    quizScore = 0;
+    quizAnswers = new Array(quizQuestions.length).fill(null);
+
+    document.getElementById('quizSettings').style.display = 'none';
+    document.getElementById('quizDisplay').style.display = 'block';
+
+    showQuestion(0);
+
+  } catch(e) {
+    console.error('Quiz generation error:', e);
+    alert('Failed to generate quiz: ' + e.message + '. Please try again.');
+  } finally {
+    btn.innerHTML = '<i class="fas fa-magic"></i> Generate Questions';
+    btn.disabled = false;
+  }
+}
+
+function showQuestion(index) {
+  if(index < 0 || index >= quizQuestions.length) return;
+
+  currentQuizIndex = index;
+  const q = quizQuestions[index];
+
+  document.getElementById('progressBarFill').style.width = ((index + 1) / quizQuestions.length * 100) + '%';
+  document.getElementById('progressText').textContent = (index + 1) + ' / ' + quizQuestions.length;
+
+  const card = document.getElementById('questionCard');
+  let html = '<div class="question-header"><span>Question ' + (index + 1) + ' of ' + quizQuestions.length + '</span><span>' + (quizAnswers[index] !== null ? (quizAnswers[index].isCorrect ? '<i class="fas fa-check" style="color:var(--success)"></i> Correct' : '<i class="fas fa-times" style="color:var(--danger)"></i> Wrong') : '') + '</span></div>';
+  html += '<div class="question-text">' + q.question + '</div>';
+  html += '<div class="options-list">';
+
+  q.options.forEach((opt, i) => {
+    const letter = String.fromCharCode(65 + i);
+    let cls = 'option';
+    if(quizAnswers[index] !== null) {
+      if(i === q.correctIndex) cls += ' correct';
+      else if(i === quizAnswers[index].selected && !quizAnswers[index].isCorrect) cls += ' wrong';
+    }
+    html += '<div class="' + cls + '" onclick="selectOption(' + i + ')" data-index="' + i + '"><div class="option-letter">' + letter + '</div><span>' + opt + '</span></div>';
+  });
+
+  html += '</div>';
+
+  if(quizAnswers[index] !== null) {
+    html += '<div class="explanation show"><strong>Explanation:</strong><br>' + q.explanation + '</div>';
+  }
+
+  card.innerHTML = html;
+
+  const nav = document.getElementById('quizNav');
+  let navHtml = '';
+  if(index > 0) {
+    navHtml += '<button class="btn-secondary" onclick="showQuestion(' + (index - 1) + ')"><i class="fas fa-arrow-left"></i> Previous</button>';
+  } else {
+    navHtml += '<span></span>';
+  }
+
+  if(index < quizQuestions.length - 1) {
+    navHtml += '<button class="btn-primary" style="width:auto;padding:0.5rem 1.5rem;" onclick="showQuestion(' + (index + 1) + ')" ' + (quizAnswers[index] === null ? 'disabled style="opacity:0.5"' : '') + '>Next <i class="fas fa-arrow-right"></i></button>';
+  } else {
+    navHtml += '<button class="btn-primary" style="width:auto;padding:0.5rem 1.5rem;" onclick="finishQuiz()">Finish <i class="fas fa-check"></i></button>';
+  }
+  nav.innerHTML = navHtml;
+}
+
+function selectOption(index) {
+  if(quizAnswers[currentQuizIndex] !== null) return;
+
+  const q = quizQuestions[currentQuizIndex];
+  const isCorrect = index === q.correctIndex;
+
+  quizAnswers[currentQuizIndex] = {selected: index, isCorrect: isCorrect};
+  if(isCorrect) quizScore++;
+
+  showQuestion(currentQuizIndex);
+}
+
+function finishQuiz() {
+  document.getElementById('quizDisplay').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  document.getElementById('quizScore').textContent = quizScore + '/' + quizQuestions.length;
+
+  const pct = (quizScore / quizQuestions.length * 100);
+  let feedback = '';
+  if(pct >= 80) feedback = 'Excellent! You have a strong understanding of this material.';
+  else if(pct >= 60) feedback = 'Good job! Review the explanations to strengthen weak areas.';
+  else feedback = 'Keep studying! Review the material and try again.';
+
+  document.getElementById('quizFeedback').textContent = feedback;
+}
+
+function resetQuiz() {
+  quizQuestions = [];
+  currentQuizIndex = 0;
+  quizScore = 0;
+  quizAnswers = [];
+  window.quizPdfText = '';
+
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizDisplay').style.display = 'none';
+  document.getElementById('quizSettings').style.display = 'none';
+  document.getElementById('uploadArea').style.display = 'block';
+  document.getElementById('pdfInput').value = '';
+}
+
+// ===== EVENT LISTENERS =====
+
+document.addEventListener('DOMContentLoaded', function() {
+  setupAutoResize(chatInput);
+  setupAutoResize(researchChatInput);
+  setupAutoResize(pdfChatInput);
+});
+
+sendChat.addEventListener('click', sendMessage);
+
+sendResearchChat.addEventListener('click', sendResearchMessage);
+
+sendPdfChat.addEventListener('click', sendPdfChatMessage);
+
+document.getElementById('uploadArea').addEventListener('click', () => document.getElementById('pdfInput').click());
+document.getElementById('uploadArea').addEventListener('dragover', (e) => {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.add('dragover');
+});
+document.getElementById('uploadArea').addEventListener('dragleave', () => {
+  document.getElementById('uploadArea').classList.remove('dragover');
+});
+document.getElementById('uploadArea').addEventListener('drop', (e) => {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if(files.length > 0) handleQuizPdfUpload(files[0]);
+});
+document.getElementById('pdfInput').addEventListener('change', (e) => {
+  if(e.target.files.length > 0) handleQuizPdfUpload(e.target.files[0]);
+});
+
+document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
+
+document.getElementById('pdfChatUploadArea').addEventListener('click', () => document.getElementById('pdfChatFileInput').click());
+document.getElementById('pdfChatUploadArea').addEventListener('dragover', (e) => {
+  e.preventDefault();
+  document.getElementById('pdfChatUploadArea').classList.add('dragover');
+});
+document.getElementById('pdfChatUploadArea').addEventListener('dragleave', () => {
+  document.getElementById('pdfChatUploadArea').classList.remove('dragover');
+});
+document.getElementById('pdfChatUploadArea').addEventListener('drop', (e) => {
+  e.preventDefault();
+  document.getElementById('pdfChatUploadArea').classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if(files.length > 0) handlePdfChatUpload(files[0]);
+});
+document.getElementById('pdfChatFileInput').addEventListener('change', (e) => {
+  if(e.target.files.length > 0) handlePdfChatUpload(e.target.files[0]);
+});
+
+document.getElementById('loadPastedText').addEventListener('click', handlePastedText);
+
+document.getElementById('copyResearch').addEventListener('click', function() {
+  const text = researchContent.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = this;
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    setTimeout(() => btn.innerHTML = original, 2000);
+  });
+});
+
+document.getElementById('downloadResearch').addEventListener('click', function() {
+  const text = researchContent.innerText;
+  const blob = new Blob([text], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'research-paper.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ===== WELCOME MESSAGE =====
+setTimeout(() => {
+  if(chatMessages.children.length === 0) {
+    addMsg(chatMessages, 'Welcome to MediAI Pro! I am your AI medical assistant. Ask me anything about medicine, and I will provide evidence-based answers with verified sources. How can I help you today?', 'bot');
+  }
+}, 500);
+
+</script>
+</body>
+</html>
